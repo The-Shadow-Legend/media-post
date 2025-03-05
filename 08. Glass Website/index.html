@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flame | Modern Design Studio</title>
+    <style>
+        /* Base styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: #0f0f0f;
+            color: #f1f1f1;
+            overflow-x: hidden;
+        }
+
+        /* Flame animation container */
+        .flame-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .flames {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60vh;
+            background-image: 
+                linear-gradient(to top, rgba(15, 15, 15, 1), rgba(15, 15, 15, 0)),
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            filter: contrast(200%) brightness(150%) hue-rotate(0deg);
+            mix-blend-mode: screen;
+            transform-origin: bottom center;
+            animation: flameAnimation 6s infinite alternate;
+        }
+
+        .flames::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            filter: contrast(170%) brightness(150%) hue-rotate(350deg);
+            mix-blend-mode: screen;
+            animation: flameMovement 10s infinite alternate;
+        }
+
+        .flames::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            filter: contrast(200%) brightness(120%) hue-rotate(20deg);
+            mix-blend-mode: screen;
+            animation: flameMovement 8s infinite alternate-reverse;
+        }
+
+        @keyframes flameAnimation {
+            0% {
+                filter: contrast(200%) brightness(150%) hue-rotate(0deg);
+                transform: scale(1.0) translateY(0);
+            }
+            50% {
+                filter: contrast(180%) brightness(130%) hue-rotate(10deg);
+                transform: scale(1.05) translateY(-5px);
+            }
+            100% {
+                filter: contrast(220%) brightness(170%) hue-rotate(5deg);
+                transform: scale(1.03) translateY(-10px);
+            }
+        }
+
+        @keyframes flameMovement {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(-15px) scale(1.05);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-5px) scale(1.02);
+                opacity: 0.9;
+            }
+        }
+
+        /* Fire ember particles */
+        .embers {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .ember {
+            position: absolute;
+            bottom: -10px;
+            background: radial-gradient(circle, rgba(255, 210, 120, 0.8) 0%, rgba(255, 120, 50, 0.4) 70%, transparent 100%);
+            border-radius: 50%;
+            animation: riseAndFade var(--rise-time) ease-out forwards;
+        }
+
+        @keyframes riseAndFade {
+            0% {
+                opacity: 1;
+                transform: translate(var(--x-start), 0) scale(1);
+            }
+            60% {
+                opacity: 0.8;
+                transform: translate(var(--x-mid), calc(-50vh * var(--rise-height))) scale(0.8);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--x-end), calc(-100vh * var(--rise-height))) scale(0.2);
+            }
+        }
+
+        /* Main content */
+        .page-wrapper {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #FF5E62, #FF9966);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            z-index: 1;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: #f1f1f1;
+            text-decoration: none;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #FF9966;
+        }
+
+        /* Main section */
+        main {
+            position: relative;
+            padding: 150px 50px 50px;
+            z-index: 1;
+        }
+
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 70vh;
+        }
+
+        h1 {
+            font-size: 5vw;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #FF5E62, #FF9966);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            max-width: 600px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(90deg, #FF5E62, #FF9966);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 94, 98, 0.3);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #FF9966, #FF5E62);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cta-button:hover::before {
+            opacity: 1;
+        }
+
+        /* Services section */
+        .services {
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 5px;
+            background: linear-gradient(90deg, #FF5E62, #FF9966);
+            border-radius: 2.5px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 60px auto 0;
+            padding: 0 20px;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 40px 30px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .service-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-10px);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #FF9966;
+        }
+
+        .service-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .service-description {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 40px 50px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #FF5E62, #FF9966);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .social-links a {
+            color: #f1f1f1;
+            margin: 0 10px;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #FF9966;
+        }
+
+        .copyright {
+            width: 100%;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            header {
+                padding: 20px 30px;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            nav {
+                display: none;
+            }
+
+            main {
+                padding: 120px 30px 30px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Flame animation background -->
+    <div class="flame-container">
+        <div class="flames"></div>
+        <div class="embers" id="embers"></div>
+    </div>
+
+    <div class="page-wrapper">
+        <header>
+            <div class="logo">IGNITE</div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#work">Our Work</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero" id="home">
+                <h1>Ignite Your Digital Presence</h1>
+                <p>We create blazing-fast websites and digital experiences that capture attention and drive results. Our expert team combines cutting-edge technology with stunning design to make your brand shine.</p>
+                <a href="#contact" class="cta-button">Get Started</a>
+            </section>
+
+            <section class="services" id="services">
+                <h2 class="section-title">Our Services</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-code"></i></div>
+                        <h3 class="service-title">Web Development</h3>
+                        <p class="service-description">Custom, responsive websites built with modern frameworks and optimized for performance.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-palette"></i></div>
+                        <h3 class="service-title">UI/UX Design</h3>
+                        <p class="service-description">User-centered designs that create intuitive, engaging experiences for your audience.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-rocket"></i></div>
+                        <h3 class="service-title">Digital Marketing</h3>
+                        <p class="service-description">Strategic campaigns that amplify your brand and connect with your target market.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h3 class="service-title">App Development</h3>
+                        <p class="service-description">Native and cross-platform mobile applications that deliver exceptional user experiences.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-logo">IGNITE</div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+                <div class="copyright">
+                    &copy; 2025 Ignite Digital. All rights reserved.
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Create ember particles
+        function createEmbers() {
+            const embersContainer = document.getElementById('embers');
+            const screenWidth = window.innerWidth;
+            
+            // Create new ember
+            function createEmber() {
+                const ember = document.createElement('div');
+                ember.classList.add('ember');
+                
+                // Random properties for natural movement
+                const size = Math.random() * 8 + 4; // 4-12px
+                const startX = Math.random() * screenWidth;
+                const xVariation1 = (Math.random() - 0.5) * 100;
+                const xVariation2 = (Math.random() - 0.5) * 200;
+                const riseHeight = Math.random() * 0.5 + 0.7; // 0.7-1.2
+                const riseTime = Math.random() * 3 + 4; // 4-7s
+                
+                // Set ember properties
+                ember.style.width = `${size}px`;
+                ember.style.height = `${size}px`;
+                ember.style.left = `${startX}px`;
+                ember.style.setProperty('--x-start', '0px');
+                ember.style.setProperty('--x-mid', `${xVariation1}px`);
+                ember.style.setProperty('--x-end', `${xVariation2}px`);
+                ember.style.setProperty('--rise-height', riseHeight);
+                ember.style.setProperty('--rise-time', `${riseTime}s`);
+                
+                // Add to container and remove when animation completes
+                embersContainer.appendChild(ember);
+                setTimeout(() => {
+                    ember.remove();
+                }, riseTime * 1000);
+            }
+            
+            // Initially create some embers
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    createEmber();
+                }, i * 100);
+            }
+            
+            // Continue creating embers
+            setInterval(createEmber, 300);
+        }
+        
+        // Initialize embers
+        createEmbers();
+        
+        // Parallax effect for flames based on mouse movement
+        document.addEventListener('mousemove', (e) => {
+            const flamesElement = document.querySelector('.flames');
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 40;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 40;
+            
+            flamesElement.style.transform = `translate(${xAxis}px, ${yAxis}px)`;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Flame | Digital Innovation</title>
+    <style>
+        /* Base styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #050510;
+            color: #f1f1f1;
+            overflow-x: hidden;
+        }
+
+        /* Galaxy animation in hero section */
+        .galaxy-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0, 0, 0, 0)),
+                            radial-gradient(2px 2px at 40px 70px, #ffffff, rgba(0, 0, 0, 0)),
+                            radial-gradient(2px 2px at 50px 160px, #ffffff, rgba(0, 0, 0, 0)),
+                            radial-gradient(2px 2px at 90px 40px, #ffffff, rgba(0, 0, 0, 0)),
+                            radial-gradient(2px 2px at 130px 80px, #ffffff, rgba(0, 0, 0, 0)),
+                            radial-gradient(2px 2px at 160px 120px, #ffffff, rgba(0, 0, 0, 0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: twinkleAnimation 4s infinite;
+            opacity: 0.5;
+        }
+
+        @keyframes twinkleAnimation {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+
+        .galaxy {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(ellipse at center, 
+                rgba(63, 12, 131, 0.3) 0%, 
+                rgba(15, 12, 41, 0.2) 40%, 
+                rgba(5, 5, 16, 0) 70%);
+            animation: rotateGalaxy 60s linear infinite;
+        }
+
+        .galaxy::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80%;
+            height: 80%;
+            transform: translate(-50%, -50%) rotate(30deg);
+            background: radial-gradient(ellipse at center, 
+                rgba(93, 30, 200, 0.2) 0%, 
+                rgba(37, 17, 99, 0.1) 40%, 
+                rgba(5, 5, 16, 0) 70%);
+            animation: rotateGalaxyInner 45s linear infinite reverse;
+        }
+
+        .galaxy::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60%;
+            height: 60%;
+            transform: translate(-50%, -50%) rotate(60deg);
+            background: radial-gradient(ellipse at center, 
+                rgba(140, 70, 240, 0.15) 0%, 
+                rgba(70, 40, 150, 0.1) 40%, 
+                rgba(5, 5, 16, 0) 70%);
+            animation: rotateGalaxyInner 30s linear infinite;
+        }
+
+        @keyframes rotateGalaxy {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes rotateGalaxyInner {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .cosmic-dust {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.1;
+            mix-blend-mode: screen;
+        }
+
+        .shooting-stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .shooting-star {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
+            animation: shootingStar linear;
+            opacity: 0;
+        }
+
+        @keyframes shootingStar {
+            0% {
+                transform: translateX(0) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(var(--travel-x)) translateY(var(--travel-y));
+                opacity: 0;
+            }
+        }
+
+        /* Flame animation container - for lower sections */
+        .flame-container {
+            position: relative;
+            overflow: hidden;
+            padding-top: 100px;
+            background: linear-gradient(to bottom, rgba(5, 5, 16, 0), #050510);
+        }
+
+        .flames {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 300px;
+            background-image: 
+                linear-gradient(to top, rgba(5, 5, 16, 1), rgba(5, 5, 16, 0)),
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            filter: contrast(200%) brightness(150%) hue-rotate(0deg);
+            mix-blend-mode: screen;
+            transform-origin: bottom center;
+            animation: flameAnimation 6s infinite alternate;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        @keyframes flameAnimation {
+            0% {
+                filter: contrast(200%) brightness(150%) hue-rotate(0deg);
+                transform: scale(1.0) translateY(0);
+            }
+            50% {
+                filter: contrast(180%) brightness(130%) hue-rotate(10deg);
+                transform: scale(1.05) translateY(-5px);
+            }
+            100% {
+                filter: contrast(220%) brightness(170%) hue-rotate(5deg);
+                transform: scale(1.03) translateY(-10px);
+            }
+        }
+
+        /* Main content */
+        .page-wrapper {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(5, 5, 16, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #8860f5, #5e72eb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            z-index: 1;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: #f1f1f1;
+            text-decoration: none;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #8860f5;
+        }
+
+        /* Hero section */
+        .hero {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 100vh;
+            padding: 0 50px;
+            z-index: 1;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 5vw;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            line-height: 1.2;
+            position: relative;
+        }
+
+        h1 span {
+            display: block;
+        }
+
+        h1 .gradient-text {
+            background: linear-gradient(90deg, #8860f5, #5e72eb, #8A41F2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            max-width: 600px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+            margin: 0 auto 40px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(90deg, #8860f5, #5e72eb);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 5px 20px rgba(136, 96, 245, 0.5);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(136, 96, 245, 0.7);
+        }
+
+        .floating-icons {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .floating-icon {
+            position: absolute;
+            opacity: 0.2;
+            filter: blur(1px);
+            animation: floatAnimation var(--float-time) ease-in-out infinite;
+        }
+
+        @keyframes floatAnimation {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(var(--float-y)) rotate(var(--float-r));
+            }
+        }
+
+        /* Services section */
+        .services {
+            position: relative;
+            padding: 100px 50px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 5px;
+            background: linear-gradient(90deg, #8860f5, #5e72eb);
+            border-radius: 2.5px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 60px auto 0;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            padding: 40px 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(136, 96, 245, 0.15), transparent 70%);
+            z-index: -1;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(136, 96, 245, 0.3);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #8860f5;
+        }
+
+        .service-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .service-description {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(5, 5, 16, 0.95);
+            padding: 50px 50px 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #8860f5, #5e72eb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .social-links a {
+            color: #f1f1f1;
+            margin: 0 10px;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #8860f5;
+        }
+
+        .copyright {
+            width: 100%;
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            header {
+                padding: 20px 30px;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .hero {
+                padding: 0 30px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .services {
+                padding: 80px 30px;
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Galaxy animation in hero section -->
+        <div class="galaxy-container">
+            <div class="stars"></div>
+            <div class="galaxy"></div>
+            <div class="cosmic-dust"></div>
+            <div class="shooting-stars" id="shooting-stars"></div>
+        </div>
+
+        <header>
+            <div class="logo">COSMOS</div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#work">Portfolio</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="hero" id="home">
+            <div class="floating-icons" id="floating-icons"></div>
+            <div class="hero-content">
+                <h1>
+                    <span>Explore The</span> 
+                    <span class="gradient-text">Digital Universe</span>
+                </h1>
+                <p>Venture into a new frontier of digital innovation with our cosmic blend of cutting-edge design and powerful technology solutions.</p>
+                <a href="#services" class="cta-button">Begin Your Journey</a>
+            </div>
+        </section>
+
+        <!-- Flame animation for services section -->
+        <div class="flame-container">
+            <div class="flames"></div>
+            <section class="services" id="services">
+                <h2 class="section-title">Our Services</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-rocket"></i></div>
+                        <h3 class="service-title">Digital Strategy</h3>
+                        <p class="service-description">Chart your course through the digital cosmos with our strategic planning and market analysis services.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-code"></i></div>
+                        <h3 class="service-title">Web Development</h3>
+                        <p class="service-description">From sleek landing pages to complex web applications, we build digital experiences that captivate and convert.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-paint-brush"></i></div>
+                        <h3 class="service-title">UI/UX Design</h3>
+                        <p class="service-description">Create intuitive interfaces and seamless user journeys that guide visitors through your digital universe.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h3 class="service-title">App Development</h3>
+                        <p class="service-description">Take your digital presence mobile with custom applications that put your brand in users' hands.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-chart-line"></i></div>
+                        <h3 class="service-title">Growth Marketing</h3>
+                        <p class="service-description">Expand your reach across the digital galaxy with data-driven marketing strategies that deliver measurable results.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-brain"></i></div>
+                        <h3 class="service-title">AI Solutions</h3>
+                        <p class="service-description">Harness the power of artificial intelligence to automate processes and gain cosmic insights from your data.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-logo">COSMOS</div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+                <div class="copyright">
+                    &copy; 2025 Cosmic Digital. All rights reserved. Venture beyond the digital frontier.
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Create shooting stars
+        function createShootingStars() {
+            const starsContainer = document.getElementById('shooting-stars');
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            
+            function createStar() {
+                // Only create star with 5% chance to avoid too many
+                if (Math.random() > 0.05) return;
+                
+                const star = document.createElement('div');
+                star.classList.add('shooting-star');
+                
+                // Random properties
+                const width = Math.random() * 100 + 50;
+                const startX = Math.random() * screenWidth;
+                const startY = Math.random() * (screenHeight * 0.7);
+                const angle = Math.random() * 50 - 25; // -25 to 25 degrees
+                const travelDistance = Math.random() * 200 + 100;
+                const duration = Math.random() * 1 + 0.5; // 0.5-1.5s
+                
+                // Calculate end position based on angle
+                const radians = angle * Math.PI / 180;
+                const travelX = Math.cos(radians) * travelDistance;
+                const travelY = Math.sin(radians) * travelDistance;
+                
+                // Set star properties
+                star.style.width = `${width}px`;
+                star.style.left = `${startX}px`;
+                star.style.top = `${startY}px`;
+                star.style.transform = `rotate(${angle}deg)`;
+                star.style.setProperty('--travel-x', `${travelX}px`);
+                star.style.setProperty('--travel-y', `${travelY}px`);
+                star.style.animation = `shootingStar ${duration}s linear`;
+                
+                // Add to container and remove when animation completes
+                starsContainer.appendChild(star);
+                setTimeout(() => {
+                    star.remove();
+                }, duration * 1000);
+            }
+            
+            // Create shooting stars periodically
+            setInterval(createStar, 200);
+        }
+
+        // Create floating tech icons
+        function createFloatingIcons() {
+            const iconsContainer = document.getElementById('floating-icons');
+            const icons = [
+                'fa-code', 'fa-rocket', 'fa-mobile-alt', 'fa-palette', 
+                'fa-database', 'fa-wifi', 'fa-cloud', 'fa-cogs',
+                'fa-laptop-code', 'fa-layer-group', 'fa-project-diagram'
+            ];
+            
+            for (let i = 0; i < 15; i++) {
+                const icon = document.createElement('i');
+                const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+                
+                icon.classList.add('fas', randomIcon, 'floating-icon');
+                
+                // Random position and animation properties
+                const size = Math.random() * 20 + 10; // 10-30px
+                const posX = Math.random() * 100; // 0-100%
+                const posY = Math.random() * 100; // 0-100%
+                const floatY = (Math.random() * 30 + 10) * (Math.random() > 0.5 ? 1 : -1); // 10-40px up or down
+                const floatR = Math.random() * 20 - 10; // -10 to 10 degrees
+                const duration = Math.random() * 10 + 10; // 10-20s
+                const delay = Math.random() * 5; // 0-5s
+                
+                // Apply styles
+                icon.style.fontSize = `${size}px`;
+                icon.style.left = `${posX}%`;
+                icon.style.top = `${posY}%`;
+                icon.style.setProperty('--float-y', `${floatY}px`);
+                icon.style.setProperty('--float-r', `${floatR}deg`);
+                icon.style.setProperty('--float-time', `${duration}s`);
+                icon.style.animationDelay = `${delay}s`;
+                
+                iconsContainer.appendChild(icon);
+            }
+        }
+        
+        // Create multiple star layers with different sizes and animations
+        function enhanceStars() {
+            const galaxyContainer = document.querySelector('.galaxy-container');
+            
+            // Create star layers with different sizes and animations
+            for (let i = 1; i <= 3; i++) {
+                const starLayer = document.createElement('div');
+                starLayer.classList.add('stars');
+                starLayer.style.backgroundSize = `${200 + i * 50}px ${200 + i * 50}px`;
+                starLayer.style.animationDuration = `${4 + i}s`;
+                starLayer.style.animationDelay = `${i * 0.5}s`;
+                starLayer.style.opacity = `${0.5 - i * 0.1}`;
+                galaxyContainer.appendChild(starLayer);
+            }
+        }
+        
+        // Parallax effect for galaxy based on mouse movement
+        document.addEventListener('mousemove', (e) => {
+            const galaxy = document.querySelector('.galaxy');
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 40;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 40;
+            
+            galaxy.style.transform = `translate(calc(-50% + ${xAxis}px), calc(-50% + ${yAxis}px)) rotate(0deg)`;
+        });
+        
+        // Initialize animations
+        document.addEventListener('DOMContentLoaded', () => {
+            createShootingStars();
+            createFloatingIcons();
+            enhanceStars();
+        });
+    </script>
+</body>
+</html>

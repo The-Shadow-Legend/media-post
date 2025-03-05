@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Broken Heart Anime</title>
+    <style>
+        :root {
+            --primary: #2d3748;
+            --accent: #e53e3e;
+            --light: #f7fafc;
+            --dark: #1a202c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* Hide scrollbar for IE, Edge and Firefox */
+        html, body {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        
+        body {
+            background-color: var(--primary);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 900px;
+            padding: 2rem;
+            text-align: center;
+            overflow: auto;
+        }
+        
+        /* Hide scrollbar for container too */
+        .container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .character {
+            position: relative;
+            margin: 2rem auto;
+            width: 300px;
+            height: 450px;
+        }
+        
+        .character-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+        
+        .heart {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 90px;
+            animation: pulse 1.5s ease infinite;
+        }
+        
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 50px;
+            height: 80px;
+            border-radius: 50px 50px 0 0;
+            background: var(--accent);
+        }
+        
+        .heart::before {
+            left: 50px;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+        
+        .heart::after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+        
+        .crack {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            width: 5px;
+            height: 60px;
+            background: var(--dark);
+            z-index: 10;
+            transform: translateX(-50%) rotate(15deg);
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--light);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .quote {
+            font-style: italic;
+            font-size: 1.2rem;
+            margin: 1.5rem 0;
+            line-height: 1.6;
+            color: #a0aec0;
+        }
+        
+        .rain {
+            position: absolute;
+            height: 100vh;
+            width: 100vw;
+            z-index: -1;
+        }
+        
+        .drop {
+            position: absolute;
+            background: linear-gradient(transparent, #718096);
+            height: 30px;
+            width: 2px;
+            opacity: 0.5;
+            animation: fall linear infinite;
+        }
+        
+        .content-area {
+            max-height: 70vh;
+            overflow-y: auto;
+            margin: 2rem 0;
+            padding-right: 20px; /* Provide some space for the hidden scrollbar */
+        }
+        
+        /* Hide scrollbar for content area */
+        .content-area::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .content-area {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .title {
+                font-size: 1.8rem;
+            }
+            .character {
+                width: 220px;
+                height: 330px;
+            }
+            .heart {
+                width: 80px;
+                height: 72px;
+            }
+            .heart::before,
+            .heart::after {
+                width: 40px;
+                height: 64px;
+            }
+            .heart::before {
+                left: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="rain" id="rain"></div>
+    
+    <div class="container">
+        <h1 class="title">Shattered Emotions</h1>
+        
+        <div class="character">
+            <img src="https://placehold.co/300x450/2d3748/f7fafc?text=Anime+Boy" alt="Anime boy" class="character-img">
+            <div class="heart">
+                <div class="crack"></div>
+            </div>
+        </div>
+        
+        <div class="content-area">
+            <p class="quote">"Sometimes the heart sees what is invisible to the eye. Mine sees only memories of what used to be."</p>
+            
+            <!-- Added some additional content to demonstrate scrolling with hidden scrollbar -->
+            <p class="quote">"The saddest thing about love is that not only the love cannot last forever, but even the heartbreak is soon forgotten."</p>
+            
+            <p class="quote">"My heart was as fragile as glass; now the pieces are too small to put back together."</p>
+        </div>
+    </div>
+
+    <script>
+        // Create rain effect
+        const rain = document.getElementById('rain');
+        const dropCount = 30;
+        
+        for (let i = 0; i < dropCount; i++) {
+            const drop = document.createElement('div');
+            drop.classList.add('drop');
+            
+            // Random positioning and animation duration
+            drop.style.left = `${Math.random() * 100}%`;
+            drop.style.animationDuration = `${Math.random() * 2 + 1}s`;
+            drop.style.opacity = Math.random() * 0.3 + 0.2;
+            
+            // Delay start of animation
+            drop.style.animationDelay = `${Math.random() * 2}s`;
+            
+            rain.appendChild(drop);
+        }
+    </script>
+</body>
+</html>

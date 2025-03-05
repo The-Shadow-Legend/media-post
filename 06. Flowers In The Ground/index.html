@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blooming Flower Garden</title>
+  <style>
+    :root {
+      /* Flower color variants */
+      --pink-petal: #ff7eb9;
+      --pink-petal-dark: #ff5aa5;
+      --purple-petal: #b19cd9;
+      --purple-petal-dark: #9a86cb;
+      --blue-petal: #77b5fe;
+      --blue-petal-dark: #5a9cf8;
+      --yellow-petal: #fff07c;
+      --yellow-petal-dark: #ffeb56;
+      --red-petal: #ff6b6b;
+      --red-petal-dark: #ff4f4f;
+      
+      --center-color: #ffcc00;
+      --center-dark: #f7b500;
+      --stem-color: #5ec232;
+      --stem-dark: #4aa828;
+      --leaf-color: #5ec232;
+      --leaf-dark: #4aa828;
+      
+      --grass-light: #7cbb5f;
+      --grass-medium: #5eac41;
+      --grass-dark: #3e9b20;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(to bottom, #87ceeb, #c2e6f8);
+      font-family: 'Arial', sans-serif;
+      overflow-x: hidden;
+      perspective: 1000px;
+    }
+
+    .garden {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    /* Ground with grass */
+    .ground {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 35%;
+      background: linear-gradient(to bottom, var(--grass-medium), var(--grass-dark));
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    /* Flower styling */
+    .flower {
+      position: absolute;
+      bottom: calc(35% - 20px);
+      z-index: 3;
+      -webkit-filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.2));
+      filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.2));
+      animation: gentle-sway 3s ease-in-out infinite alternate;
+      transform-origin: bottom center;
+    }
+
+    .stem {
+      width: 6px;
+      height: 80px;
+      background: linear-gradient(to right, var(--stem-dark), var(--stem-color), var(--stem-color), var(--stem-dark));
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      border-radius: 0 0 3px 3px;
+    }
+
+    .leaf {
+      position: absolute;
+      width: 30px;
+      height: 15px;
+      background: linear-gradient(to bottom, var(--leaf-color), var(--leaf-dark));
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      z-index: 0;
+    }
+
+    .leaf.left {
+      transform: rotate(30deg);
+      left: -25px;
+      top: 30px;
+    }
+
+    .leaf.right {
+      transform: rotate(-30deg) scaleX(-1);
+      right: -25px;
+      top: 50px;
+    }
+
+    .petal-container {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 0 auto;
+      z-index: 2;
+      animation: slight-rotate 5s ease-in-out infinite alternate;
+    }
+
+    .petal {
+      position: absolute;
+      width: 45px;
+      height: 45px;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      transform-origin: center bottom;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+      animation: petal-sway 4s infinite ease-in-out;
+      opacity: 1;
+    }
+
+    .flower.pink .petal {
+      background: radial-gradient(circle at 70% 30%, white 4%, var(--pink-petal) 30%, var(--pink-petal-dark) 100%);
+    }
+
+    .flower.purple .petal {
+      background: radial-gradient(circle at 70% 30%, white 4%, var(--purple-petal) 30%, var(--purple-petal-dark) 100%);
+    }
+
+    .flower.blue .petal {
+      background: radial-gradient(circle at 70% 30%, white 4%, var(--blue-petal) 30%, var(--blue-petal-dark) 100%);
+    }
+
+    .flower.yellow .petal {
+      background: radial-gradient(circle at 70% 30%, white 4%, var(--yellow-petal) 30%, var(--yellow-petal-dark) 100%);
+    }
+
+    .flower.red .petal {
+      background: radial-gradient(circle at 70% 30%, white 4%, var(--red-petal) 30%, var(--red-petal-dark) 100%);
+    }
+
+    .petal:nth-child(1) {
+      top: -25px;
+      left: 18px;
+      transform: rotate(0deg);
+      animation-delay: 0s;
+    }
+
+    .petal:nth-child(2) {
+      top: -8px;
+      right: -10px;
+      transform: rotate(72deg);
+      animation-delay: 0.2s;
+    }
+
+    .petal:nth-child(3) {
+      bottom: -5px;
+      right: 0;
+      transform: rotate(144deg);
+      animation-delay: 0.4s;
+    }
+
+    .petal:nth-child(4) {
+      bottom: -5px;
+      left: 0;
+      transform: rotate(216deg);
+      animation-delay: 0.6s;
+    }
+
+    .petal:nth-child(5) {
+      top: -8px;
+      left: -10px;
+      transform: rotate(288deg);
+      animation-delay: 0.8s;
+    }
+
+    .center {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background: radial-gradient(circle, var(--center-color) 0%, var(--center-dark) 100%);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
+      z-index: 3;
+    }
+
+    .dot {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background-color: #884400;
+      border-radius: 50%;
+    }
+
+    .dot:nth-child(1) { top: 30%; left: 30%; }
+    .dot:nth-child(2) { top: 40%; left: 60%; }
+    .dot:nth-child(3) { top: 60%; left: 70%; }
+    .dot:nth-child(4) { top: 70%; left: 40%; }
+    .dot:nth-child(5) { top: 50%; left: 50%; }
+
+    /* Individual grass blades */
+    .grass-blade {
+      position: absolute;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(to top, var(--grass-dark), var(--grass-light));
+      border-radius: 2px 2px 0 0;
+      transform-origin: bottom center;
+      animation: grass-sway 3s infinite ease-in-out;
+    }
+    
+    /* Sunshine effect */
+    .sun {
+      position: absolute;
+      top: 10%;
+      right: 10%;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, #ffffa0 30%, #ffff00 70%);
+      border-radius: 50%;
+      box-shadow: 0 0 50px #ffffc0, 0 0 100px #ffff80;
+      z-index: 0;
+      animation: pulse 4s infinite alternate ease-in-out;
+    }
+    
+    .sunbeam {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+      animation: sunbeam-rotate 60s linear infinite;
+      z-index: 0;
+      transform-origin: center;
+    }
+
+    /* Animations */
+    @keyframes gentle-sway {
+      0% { transform: rotate(-2deg); }
+      100% { transform: rotate(2deg); }
+    }
+
+    @keyframes slight-rotate {
+      0% { transform: rotate(-3deg); }
+      100% { transform: rotate(3deg); }
+    }
+
+    @keyframes petal-sway {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(5deg) scale(1.05); }
+    }
+
+    @keyframes grass-sway {
+      0%, 100% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(1.1); opacity: 1; }
+    }
+    
+    @keyframes sunbeam-rotate {
+      0% { transform: rotate(0deg) scale(1); }
+      100% { transform: rotate(360deg) scale(1.5); }
+    }
+
+    /* Small rocks and details */
+    .rock {
+      position: absolute;
+      background: linear-gradient(to bottom right, #999, #777, #555);
+      border-radius: 30% 40% 30% 50%;
+      z-index: 2;
+    }
+
+    /* Butterfly styling */
+    .butterfly {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      z-index: 5;
+      pointer-events: none;
+      animation: butterfly-path 20s infinite alternate ease-in-out;
+    }
+
+    .butterfly-wing {
+      position: absolute;
+      width: 15px;
+      height: 20px;
+      border-radius: 50% 50% 50% 50% / 80% 80% 20% 20%;
+      top: 0;
+      animation-duration: 0.2s;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+      animation-timing-function: ease-in-out;
+      opacity: 0.9;
+    }
+
+    .butterfly-wing.left {
+      left: -10px;
+      transform-origin: right center;
+      animation-name: flutter-left;
+    }
+
+    .butterfly-wing.right {
+      right: -10px;
+      transform-origin: left center;
+      animation-name: flutter-right;
+    }
+
+    .butterfly-body {
+      position: absolute;
+      width: 4px;
+      height: 20px;
+      background: linear-gradient(to bottom, #333, #666);
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      border-radius: 2px;
+      z-index: 1;
+    }
+
+    @keyframes flutter-left {
+      0% { transform: rotateY(0deg); }
+      100% { transform: rotateY(-60deg); }
+    }
+
+    @keyframes flutter-right {
+      0% { transform: rotateY(0deg); }
+      100% { transform: rotateY(60deg); }
+    }
+    
+    @keyframes butterfly-path {
+      0% { transform: translate(10vw, 10vh) rotate(0deg); }
+      20% { transform: translate(30vw, 15vh) rotate(10deg); }
+      40% { transform: translate(50vw, 5vh) rotate(-5deg); }
+      60% { transform: translate(70vw, 10vh) rotate(15deg); }
+      80% { transform: translate(50vw, 20vh) rotate(-10deg); }
+      100% { transform: translate(20vw, 15vh) rotate(5deg); }
+    }
+    
+    /* Clouds */
+    .cloud {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      filter: blur(5px);
+      z-index: 0;
+      animation: cloud-move linear infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="garden">
+    <!-- Sun with rays -->
+    <div class="sun">
+      <div class="sunbeam"></div>
+    </div>
+    
+    <!-- Clouds -->
+    <div id="clouds"></div>
+    
+    <!-- Ground with grass -->
+    <div class="ground">
+      <div id="grass-container"></div>
+    </div>
+    
+    <!-- Flowers will be added via JavaScript -->
+    <div id="flower-container"></div>
+    
+    <!-- Rocks will be added via JavaScript -->
+    <div id="rock-container"></div>
+    
+    <!-- Butterflies will be added via JavaScript -->
+    <div id="butterfly-container"></div>
+  </div>
+
+  <script>
+    // Create flowers
+    const flowerContainer = document.getElementById('flower-container');
+    const flowerColors = ['pink', 'purple', 'blue', 'yellow', 'red'];
+    const flowerCount = 20;
+    
+    // Function to place flowers on the ground
+    function createFlower(x, zIndex, color, scale) {
+      const flower = document.createElement('div');
+      flower.classList.add('flower', color);
+      flower.style.left = `${x}%`;
+      flower.style.zIndex = zIndex;
+      flower.style.transform = `scale(${scale})`;
+      
+      // Create flower structure
+      flower.innerHTML = `
+        <div class="petal-container">
+          <div class="petal"></div>
+          <div class="petal"></div>
+          <div class="petal"></div>
+          <div class="petal"></div>
+          <div class="petal"></div>
+          <div class="center">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+        <div class="stem">
+          <div class="leaf left"></div>
+          <div class="leaf right"></div>
+        </div>
+      `;
+      
+      // Randomize animation delays
+      const petals = flower.querySelectorAll('.petal');
+      petals.forEach(petal => {
+        petal.style.animationDelay = `${Math.random() * 2}s`;
+      });
+      
+      flower.style.animationDelay = `${Math.random() * 2}s`;
+      flower.querySelector('.petal-container').style.animationDelay = `${Math.random() * 2}s`;
+      
+      // Adjust stem height based on scale
+      flower.querySelector('.stem').style.height = `${80 * scale}px`;
+      
+      flowerContainer.appendChild(flower);
+    }
+    
+    // Create flowers with different sizes, depths, and positions
+    function createFlowers() {
+      // Front row (larger flowers)
+      for (let i = 0; i < 8; i++) {
+        const x = 5 + i * 12 + (Math.random() * 5 - 2.5);
+        const color = flowerColors[Math.floor(Math.random() * flowerColors.length)];
+        const scale = 0.9 + Math.random() * 0.3;
+        createFlower(x, 10, color, scale);
+      }
+      
+      // Middle row
+      for (let i = 0; i < 7; i++) {
+        const x = 10 + i * 13 + (Math.random() * 6 - 3);
+        const color = flowerColors[Math.floor(Math.random() * flowerColors.length)];
+        const scale = 0.7 + Math.random() * 0.2;
+        createFlower(x, 8, color, scale);
+      }
+      
+      // Back row (smaller flowers)
+      for (let i = 0; i < 5; i++) {
+        const x = 15 + i * 15 + (Math.random() * 8 - 4);
+        const color = flowerColors[Math.floor(Math.random() * flowerColors.length)];
+        const scale = 0.5 + Math.random() * 0.2;
+        createFlower(x, 6, color, scale);
+      }
+    }
+    
+    // Create grass blades
+    const grassContainer = document.getElementById('grass-container');
+    const grassCount = 300;
+    
+    function createGrass() {
+      for (let i = 0; i < grassCount; i++) {
+        const grass = document.createElement('div');
+        grass.classList.add('grass-blade');
+        
+        const height = 20 + Math.random() * 30;
+        const width = 1 + Math.random() * 2;
+        const position = Math.random() * 100;
+        const delay = Math.random() * 2;
+        const duration = 2 + Math.random() * 2;
+        
+        grass.style.height = `${height}px`;
+        grass.style.width = `${width}px`;
+        grass.style.left = `${position}%`;
+        grass.style.animationDuration = `${duration}s`;
+        grass.style.animationDelay = `${delay}s`;
+        
+        const hue = 100 + Math.random() * 30 - 15; // Grass green with variation
+        const lightness = 35 + Math.random() * 20;
+        grass.style.backgroundColor = `hsl(${hue}, 60%, ${lightness}%)`;
+        
+        grassContainer.appendChild(grass);
+      }
+    }
+    
+    // Create rocks
+    const rockContainer = document.getElementById('rock-container');
+    const rockCount = 12;
+    
+    function createRocks() {
+      for (let i = 0; i < rockCount; i++) {
+        const rock = document.createElement('div');
+        rock.classList.add('rock');
+        
+        const size = 5 + Math.random() * 15;
+        const position = Math.random() * 95;
+        
+        rock.style.width = `${size}px`;
+        rock.style.height = `${size * 0.7}px`;
+        rock.style.left = `${position}%`;
+        rock.style.bottom = `calc(35% - ${size * 0.3}px)`;
+        
+        // Vary the rock colors slightly
+        const brightness = 70 + Math.random() * 20;
+        rock.style.background = `linear-gradient(to bottom right, 
+          hsl(0, 0%, ${brightness}%), 
+          hsl(0, 0%, ${brightness - 20}%))`;
+        
+        // Random rotation
+        rock.style.transform = `rotate(${Math.random() * 360}deg)`;
+        
+        rockContainer.appendChild(rock);
+      }
+    }
+    
+    // Create butterflies
+    const butterflyContainer = document.getElementById('butterfly-container');
+    const butterflyCount = 5;
+    
+    function createButterflies() {
+      for (let i = 0; i < butterflyCount; i++) {
+        const butterfly = document.createElement('div');
+        butterfly.classList.add('butterfly');
+        
+        // Random butterfly color
+        const hue = Math.floor(Math.random() * 360);
+        const saturation = 70 + Math.random() * 30;
+        const lightness = 70 + Math.random() * 20;
+        const color = `hsla(${hue}, ${saturation}%, ${lightness}%, 0.9)`;
+        
+        butterfly.innerHTML = `
+          <div class="butterfly-wing left" style="background-color: ${color}"></div>
+          <div class="butterfly-body"></div>
+          <div class="butterfly-wing right" style="background-color: ${color}"></div>
+        `;
+        
+        // Random size
+        const size = 0.6 + Math.random() * 0.8;
+        butterfly.style.transform = `scale(${size})`;
+        
+        // Random position
+        butterfly.style.top = `${30 + Math.random() * 30}%`;
+        
+        // Random animation
+        butterfly.style.animationDelay = `${Math.random() * 10}s`;
+        butterfly.style.animationDuration = `${30 + Math.random() * 15}s`;
+        
+        butterflyContainer.appendChild(butterfly);
+      }
+    }
+    
+    // Create clouds
+    const cloudsContainer = document.getElementById('clouds');
+    const cloudCount = 6;
+    
+    function createClouds() {
+      for (let i = 0; i < cloudCount; i++) {
+        // Create main cloud
+        const cloud = document.createElement('div');
+        cloud.classList.add('cloud');
+        
+        // Cloud positioning and size
+        const size = 100 + Math.random() * 200;
+        const yPos = 5 + Math.random() * 20;
+        const xPos = -20 - Math.random() * 10;
+        
+        cloud.style.width = `${size}px`;
+        cloud.style.height = `${size * 0.6}px`;
+        cloud.style.top = `${yPos}%`;
+        cloud.style.left = `${xPos}%`;
+        
+        // Animation speed based on cloud height (lower clouds move faster)
+        const speed = 90 + (20 - yPos) * 2;
+        cloud.style.animationDuration = `${speed}s`;
+        cloud.style.animationDelay = `${-Math.random() * 50}s`;
+        
+        cloudsContainer.appendChild(cloud);
+      }
+    }
+    
+    // Initialize all scene elements
+    function initializeScene() {
+      createFlowers();
+      createGrass();
+      createRocks();
+      createButterflies();
+      createClouds();
+      
+      // Add cloud movement animation dynamically
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes cloud-move {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(${window.innerWidth + 400}px); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    // Run the scene creation
+    window.addEventListener('DOMContentLoaded', initializeScene);
+  </script>
+</body>
+</html>

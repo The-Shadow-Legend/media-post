@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oceanus | The Deep Blue Experience</title>
+    <style>
+        /* Base styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(180deg, #1a4567 0%, #0c2e48 100%);
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Ocean animation container */
+        .ocean-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        /* Ocean gradient background */
+        .deep-ocean {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                rgba(5, 40, 75, 0) 0%, 
+                rgba(5, 40, 75, 0.2) 40%, 
+                rgba(4, 30, 60, 0.4) 70%, 
+                rgba(2, 20, 45, 0.8) 100%);
+        }
+
+        /* Surface waves */
+        .waves {
+            position: absolute;
+            width: 100%;
+            height: 200px;
+            top: 25%;
+        }
+
+        .wave {
+            position: absolute;
+            width: 100%;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.35' fill='%2389C4F4'%3E%3C/path%3E%3C/svg%3E") repeat-x;
+            background-size: 1200px 100px;
+            animation: waveAnimation linear infinite;
+        }
+
+        @keyframes waveAnimation {
+            0% {
+                background-position-x: 0;
+            }
+            100% {
+                background-position-x: 1200px;
+            }
+        }
+
+        .wave1 {
+            opacity: 0.7;
+            animation-duration: 20s;
+            z-index: 3;
+        }
+
+        .wave2 {
+            opacity: 0.5;
+            margin-top: 10px;
+            animation-duration: 15s;
+            z-index: 2;
+        }
+
+        .wave3 {
+            opacity: 0.3;
+            margin-top: 20px;
+            animation-duration: 30s;
+            animation-direction: reverse;
+            z-index: 1;
+        }
+
+        /* Light rays */
+        .light-rays {
+            position: absolute;
+            top: -100px;
+            left: 0;
+            width: 100%;
+            height: 500px;
+            background: linear-gradient(to bottom, 
+                rgba(255, 255, 255, 0.2) 0%,
+                rgba(255, 255, 255, 0) 80%);
+            transform: skewY(-5deg);
+            z-index: 1;
+            opacity: 0.3;
+        }
+
+        /* Bubbles */
+        .bubbles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle at 30% 30%,
+                rgba(255, 255, 255, 0.8) 0%,
+                rgba(255, 255, 255, 0.4) 30%,
+                rgba(255, 255, 255, 0.1) 70%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.3);
+            animation: bubbleFloat linear infinite;
+        }
+
+        @keyframes bubbleFloat {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) translateX(var(--translateX)) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* Underwater particles */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: particleDrift linear infinite;
+        }
+
+        @keyframes particleDrift {
+            0% {
+                transform: translate(0, 0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(var(--x), var(--y));
+                opacity: 0;
+            }
+        }
+
+        /* Underwater plants */
+        .seaweed {
+            position: absolute;
+            bottom: -20px;
+            width: 30px;
+            background-color: rgba(32, 178, 95, 0.4);
+            border-radius: 50px;
+            transform-origin: bottom center;
+            filter: blur(1px);
+            animation: swayAnimation ease-in-out infinite alternate;
+        }
+
+        @keyframes swayAnimation {
+            0% {
+                transform: rotate(var(--start-angle));
+            }
+            100% {
+                transform: rotate(var(--end-angle));
+            }
+        }
+
+        /* Main content */
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(10, 50, 90, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+            color: #89C4F4;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 8px 15px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav ul li a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #89C4F4;
+            transition: width 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #89C4F4;
+        }
+
+        nav ul li a:hover::before {
+            width: 100%;
+        }
+
+        /* Hero section */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            min-height: 100vh;
+            padding: 150px 50px 50px;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 0 2px 15px rgba(0, 100, 200, 0.5);
+        }
+
+        .hero-subtitle {
+            font-size: 1.8rem;
+            color: #89C4F4;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 16px 50px;
+            background: rgba(137, 196, 244, 0.2);
+            color: #fff;
+            border: 2px solid #89C4F4;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: #89C4F4;
+            z-index: -1;
+            transition: width 0.3s ease;
+        }
+
+        .cta-button:hover {
+            color: #0c2e48;
+        }
+
+        .cta-button:hover::before {
+            width: 100%;
+        }
+
+        /* Features section */
+        .section {
+            padding: 100px 50px;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 60px;
+            text-align: center;
+            position: relative;
+            color: #fff;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: rgba(137, 196, 244, 0.8);
+            border-radius: 2px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #89C4F4, #3498db);
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-card:hover::before {
+            transform: translateY(0);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 25px;
+            color: #89C4F4;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .feature-text {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        /* Gallery section */
+        .gallery {
+            padding: 100px 50px;
+        }
+
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            aspect-ratio: 4/3;
+            cursor: pointer;
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover .gallery-image {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+            color: #fff;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-title {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        /* Footer styling */
+        footer {
+            padding: 80px 50px 30px;
+            background: rgba(5, 30, 50, 0.9);
+            position: relative;
+            margin-top: 100px;
+        }
+
+        .footer-wave {
+            position: absolute;
+            top: -100px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z' fill='rgba(5, 30, 50, 0.9)'%3E%3C/path%3E%3C/svg%3E") no-repeat;
+            background-size: cover;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-logo {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #89C4F4;
+        }
+
+        .footer-info p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+
+        .footer-title {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: #89C4F4;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .footer-links a:hover {
+            color: #89C4F4;
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: #89C4F4;
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            width: 100%;
+            text-align: center;
+            margin-top: 70px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 20px 30px;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .hero {
+                padding: 120px 30px 50px;
+            }
+
+            h1 {
+                font-size: 3rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.3rem;
+            }
+
+            .section,
+            .gallery {
+                padding: 70px 30px;
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Ocean animation background -->
+    <div class="ocean-container">
+        <div class="deep-ocean"></div>
+        <div class="light-rays"></div>
+        <div class="waves">
+            <div class="wave wave1"></div>
+            <div class="wave wave2"></div>
+            <div class="wave wave3"></div>
+        </div>
+        <div class="bubbles" id="bubbles"></div>
+        <div class="particles" id="particles"></div>
+        <div class="seaweeds" id="seaweeds"></div>
+    </div>
+
+    <div class="page-wrapper">
+        <header>
+            <div class="logo">
+                <i class="fas fa-water"></i>
+                OCEANUS
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <h1>Dive Into The Blue</h1>
+                <div class="hero-subtitle">Explore the depths of digital innovation</div>
+                <p>
+                    Immerse yourself in a sea of possibilities with our fluid, dynamic solutions that flow seamlessly across all platforms. Our deep expertise helps your business navigate the digital waters with confidence.
+                </p>
+                <a href="#services" class="cta-button">Explore The Deep</a>
+            </div>
+        </section>
+
+        <section class="section" id="services">
+            <h2 class="section-title">Our Ocean of Services</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-wave-square"></i>
+                    </div>
+                    <h3 class="feature-title">Fluid Web Design</h3>
+                    <p class="feature-text">
+                        Responsive websites that flow perfectly across all devices, creating a smooth user experience no matter where your audience is diving in from.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-compass"></i>
+                    </div>
+                    <h3 class="feature-title">Digital Navigation</h3>
+                    <p class="feature-text">
+                        Strategic guidance through the digital ocean, helping you chart a course to success in an ever-changing online environment.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <h3 class="feature-title">Deep Data Insights</h3>
+                    <p class="feature-text">
+                        Dive deep into your analytics to uncover hidden treasures of information that can transform your business strategy and performance.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="gallery" id="gallery">
+            <h2 class="section-title">Ocean Gallery</h2>
+            <div class="gallery-container">
+                <div class="gallery-item">
+                    <img src="https://source.unsplash.com/random/600x450/?ocean,reef" alt="Ocean Scene" class="gallery-image">
+                    <div class="gallery-overlay">
+                        <h3 class="gallery-title">Coral Reefs</h3>
+                        <p>Vibrant ecosystems beneath the waves</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://source.unsplash.com/random/600x450/?underwater,fish" alt="Ocean Scene" class="gallery-image">
+                    <div class="gallery-overlay">
+                        <h3 class="gallery-title">Marine Life</h3>
+                        <p>Exploring the diversity of ocean inhabitants</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://source.unsplash.com/random/600x450/?waves,sea" alt="Ocean Scene" class="gallery-image">
+                    <div class="gallery-overlay">
+                        <h3 class="gallery-title">Ocean Waves</h3>
+                        <p>The rhythmic pulse of our blue planet</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://source.unsplash.com/random/600x450/?beach,coast" alt="Ocean Scene" class="gallery-image">
+                    <div class="gallery-overlay">
+                        <h3 class="gallery-title">Coastal Beauty</h3>
+                        <p>Where land meets the endless sea</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-wave"></div>
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="footer-logo">OCEANUS</div>
+                    <p>
+                        We help brands dive into digital success with fluid, dynamic solutions that create waves in their industry. Our sea of expertise helps you navigate the challenging waters of the digital landscape.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-nav">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#gallery">Gallery</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h3 class="footer-title">Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Deep Blue Tower, Ocean Avenue</li>
+                        <li><i class="fas fa-phone"></i> +1 (305) 555-8900</li>
+                        <li><i class="fas fa-envelope"></i> hello@oceanusweb.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Oceanus Digital. All rights reserved. Flowing through the digital seas since 2018.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Create bubbles
+        function createBubbles() {
+            const bubblesContainer = document.getElementById('bubbles');
+            const bubbleCount = 40;
+            
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                
+                // Random bubble properties
+                const size = Math.random() * 25 + 5; // 5-30px
+                const left = Math.random() * 100; // 0-100%
+                const animationDuration = Math.random() * 10 + 10; // 10-20s
+                const delay = Math.random() * 20; // 0-20s
+                const translateX = (Math.random() - 0.5) * 100; // -50px to 50px
+                
+                // Apply styles
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${left}%`;
+                bubble.style.bottom = `-${size}px`;
+                bubble.style.animationDuration = `${animationDuration}s`;
+                bubble.style.animationDelay = `${delay}s`;
+                bubble.style.setProperty('--translateX', `${translateX}px`);
+                
+                bubblesContainer.appendChild(bubble);
+            }
+        }
+        
+        // Create underwater particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 100;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random particle properties
+                const size = Math.random() * 3 + 1; // 1-4px
+                const left = Math.random() * 100; // 0-100%
+                const top = Math.random() * 100; // 0-100%
+                const animationDuration = Math.random() * 30 + 20; // 20-50s
+                const xMovement = (Math.random() - 0.5) * 200; // -100px to 100px
+                const yMovement = (Math.random() - 0.5) * 200; // -100px to 100px
+                
+                // Apply styles
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${left}%`;
+                particle.style.top = `${top}%`;
+                particle.style.animationDuration = `${animationDuration}s`;
+                particle.style.setProperty('--x', `${xMovement}px`);
+                particle.style.setProperty('--y', `${yMovement}px`);
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Create seaweed plants
+        function createSeaweed() {
+            const seaweedsContainer = document.getElementById('seaweeds');
+            const seaweedCount = 15;
+            
+            for (let i = 0; i < seaweedCount; i++) {
+                const seaweed = document.createElement('div');
+                seaweed.classList.add('seaweed');
+                
+                // Random properties
+                const height = Math.random() * 150 + 100; // 100-250px
+                const left = Math.random() * 100; // 0-100%
+                const width = Math.random() * 10 + 5; // 5-15px
+                const animationDuration = Math.random() * 5 + 5; // 5-10s
+                const startAngle = Math.random() * 10 - 15; // -15 to -5 degrees
+                const endAngle = Math.random() * 10 + 5; // 5 to 15 degrees
+                const hue = 120 + Math.random() * 40; // Different green hues
+                
+                // Apply styles
+                seaweed.style.height = `${height}px`;
+                seaweed.style.width = `${width}px`;
+                seaweed.style.left = `${left}%`;
+                seaweed.style.animationDuration = `${animationDuration}s`;
+                seaweed.style.backgroundColor = `hsla(${hue}, 70%, 40%, 0.4)`;
+                seaweed.style.setProperty('--start-angle', `${startAngle}deg`);
+                seaweed.style.setProperty('--end-angle', `${endAngle}deg`);
+                
+                seaweedsContainer.appendChild(seaweed);
+            }
+        }
+        
+        // Add subtle parallax effect to ocean elements
+        document.addEventListener('mousemove', (e) => {
+            const waves = document.querySelector('.waves');
+            const lightRays = document.querySelector('.light-rays');
+            
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 50;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 50;
+            
+            waves.style.transform = `translateX(${xAxis}px)`;
+            lightRays.style.transform = `skewY(-5deg) translateX(${xAxis * 2}px)`;
+        });
+        
+        // Initialize all animations
+        document.addEventListener('DOMContentLoaded', () => {
+            createBubbles();
+            createParticles();
+            createSeaweed();
+        });
+    </script>
+</body>
+</html>

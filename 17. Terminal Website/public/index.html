@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminal Portfolio</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Add a monospace font from Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="terminal">
+      <div class="terminal-header">
+        <div class="terminal-buttons">
+          <div class="terminal-button close"></div>
+          <div class="terminal-button minimize"></div>
+          <div class="terminal-button maximize"></div>
+        </div>
+        <div class="terminal-title">user@portfolio:~</div>
+      </div>
+      
+      <div class="terminal-body">
+        <div class="terminal-content" id="terminal-content">
+          <div class="intro">
+            <pre class="ascii-art">
+ _______ _______ ______ ___ ___ ___ __   _  ___  _     
+ |______ |______ |_____  |   |   |  | \  | |___ | |    
+ |______ |______ |_____  |  _|_ _|_ |  \_| |___ |_|___ 
+                                                       
+            </pre>
+            <p>Welcome to my terminal portfolio! Type <span class="command">help</span> to see available commands.</p>
+          </div>
+          <div class="terminal-line">
+            <span class="prompt">user@portfolio:~$</span>
+            <span class="command-input" id="command-input" contenteditable="true" autofocus></span>
+            <span class="cursor"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="js/terminal.js"></script>
+</body>
+</html>

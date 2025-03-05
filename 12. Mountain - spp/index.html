@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpina | Mountain Adventure</title>
+    <style>
+        /* Base styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background: #0b1f2c;
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            cursor: none; /* Hide default cursor for custom cursor */
+        }
+
+        /* Custom cursor */
+        .cursor-dot,
+        .cursor-outline {
+            pointer-events: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            z-index: 9999;
+            opacity: 1;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #c9a97a;
+            transition: width 0.2s, height 0.2s;
+        }
+
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(201, 169, 122, 0.5);
+            transition: transform 0.1s, width 0.3s, height 0.3s, border 0.3s;
+        }
+
+        .cursor-hover {
+            transform: translate(-50%, -50%) scale(1.5);
+            background-color: rgba(201, 169, 122, 0.1);
+            border: 1px solid rgba(201, 169, 122, 0.8);
+        }
+
+        /* Cursor-following elements */
+        .eagle {
+            position: fixed;
+            width: 60px;
+            height: 30px;
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0.8;
+            transform: translate(-50%, -50%);
+            animation: eagleGlide 2s infinite alternate ease-in-out;
+        }
+
+        .eagle-wing {
+            position: absolute;
+            width: 30px;
+            height: 10px;
+            background: rgba(80, 80, 80, 0.7);
+            top: 50%;
+            transform-origin: center;
+            animation: eagleWing 0.8s infinite alternate ease-in-out;
+        }
+
+        .eagle-wing-left {
+            left: 0;
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 5px;
+            transform: translateY(-50%) rotate(-15deg);
+        }
+
+        .eagle-wing-right {
+            right: 0;
+            border-top-right-radius: 30px;
+            border-bottom-right-radius: 5px;
+            transform: translateY(-50%) rotate(15deg);
+        }
+
+        .eagle-body {
+            position: absolute;
+            width: 20px;
+            height: 10px;
+            background: rgba(60, 60, 60, 0.8);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes eagleWing {
+            0% {
+                transform: translateY(-50%) rotate(-15deg);
+            }
+            100% {
+                transform: translateY(-50%) rotate(-35deg);
+            }
+        }
+
+        @keyframes eagleWing {
+            0% {
+                transform: translateY(-50%) rotate(15deg);
+            }
+            100% {
+                transform: translateY(-50%) rotate(35deg);
+            }
+        }
+
+        .cloud-follow {
+            position: fixed;
+            pointer-events: none;
+            z-index: 5;
+            transition: transform 0.1s ease-out;
+            filter: blur(5px);
+            opacity: 0.5;
+        }
+
+        /* Mountain background container */
+        .mountain-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Sky gradient */
+        .sky {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, 
+                #0b1f2c 0%, 
+                #1c3544 40%, 
+                #274355 70%, 
+                #385165 100%);
+        }
+
+        /* Stars */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
+            background-image: 
+                radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0, 0, 0, 0)),
+                radial-gradient(1px 1px at 40px 70px, #ffffff, rgba(0, 0, 0, 0)),
+                radial-gradient(1px 1px at 50px 160px, #ffffff, rgba(0, 0, 0, 0)),
+                radial-gradient(1px 1px at 90px 40px, #ffffff, rgba(0, 0, 0, 0)),
+                radial-gradient(1px 1px at 130px 80px, #ffffff, rgba(0, 0, 0, 0)),
+                radial-gradient(1px 1px at 160px 120px, #ffffff, rgba(0, 0, 0, 0));
+            background-repeat: repeat;
+            background-size: 250px 250px;
+            opacity: 0.5;
+        }
+
+        .star-twinkle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: twinkle 3s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 1;
+            }
+        }
+
+        /* Mountains */
+        .mountains {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 70%;
+        }
+
+        .mountain {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 70%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            transition: transform 0.2s ease-out;
+        }
+
+        .mountain-back {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800' preserveAspectRatio='none'%3E%3Cpath d='M0,800h1200V312.5c-21.3-1.7-42.6-5.8-64-12.5c-42.7-13.7-85.2-38.5-127.7-74.5c-42.5-36-85-82.7-127.5-140c-8.5-11.7-17-23.7-25.5-36c-25.7-37-51.3-75.7-77-115c-25.7-39.3-51.3-79.3-77-120c-25.7-40.7-51.3-82-77-124c-8.5-14-17-28-25.5-42L591,0c-8.5,5.3-17,10.7-25.5,16c-25.7,16-51.3,32-77,48c-25.7,16-51.3,32-77,48c-25.7,16-51.3,32-77,48c-25.7,16-51.3,32-77,48c-25.7,16-51.3,32-77,48c-8.5,5.3-17,10.7-25.5,16c-25.7,16-51.3,32-77,48c-8.5,5.3-17,10.7-25.5,16c-25.7,16-51.3,32-77,48V800z' fill='%23152833'/%3E%3C/svg%3E");
+            opacity: 0.8;
+            z-index: 1;
+        }
+
+        .mountain-mid {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800' preserveAspectRatio='none'%3E%3Cpath d='M0,800h1200V480c-40-32-80-64-120-96c-40-32-80-64-120-96c-40-32-80-64-120-96c-40-32-80-64-120-96c-13.3-10.7-26.7-21.3-40-32c-40-32-80-64-120-96c-8.9-7.1-17.8-14.2-26.7-21.3L513.3,0c-13.3,26.7-26.7,53.3-40,80c-13.3,26.7-26.7,53.3-40,80c-13.3,26.7-26.7,53.3-40,80c-13.3,26.7-26.7,53.3-40,80c-13.3,26.7-26.7,53.3-40,80c-13.3,26.7-26.7,53.3-40,80c-13.3,26.7-26.7,53.3-40,80c-1.5,2.9-2.9,5.8-4.4,8.7c-13.3,26.7-26.7,53.3-40,80c-13.3,26.7-26.7,53.3-40,80c-13.3,26.7-26.7,53.3-40,80c-13.3,26.7-26.7,53.3-40,80c-13.3,26.7-26.7,53.3-40,80V800z' fill='%231e3540'/%3E%3C/svg%3E");
+            z-index: 2;
+        }
+
+        .mountain-front {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800' preserveAspectRatio='none'%3E%3Cpath d='M0,800h1200V375c-7.5-5-15-10-22.5-15c-30-20-60-40-90-60c-30-20-60-40-90-60c-30-20-60-40-90-60c-30-20-60-40-90-60c-30-20-60-40-90-60c-30-20-60-40-90-60c-30-20-60-40-90-60c-4.7-3.1-9.4-6.2-14.1-9.4c-30-20-60-40-90-60c-30-20-60-40-90-60c-30-20-60-40-90-60c-30-20-60-40-90-60c-11.3-7.5-22.5-15-33.8-22.5c-15-10-30-20-45-30L0,800z' fill='%23274355'/%3E%3C/svg%3E");
+            z-index: 3;
+        }
+
+        /* Fog layers */
+        .fog {
+            position: absolute;
+            width: 100%;
+            opacity: 0.8;
+            overflow: hidden;
+        }
+
+        .fog-container {
+            position: absolute;
+            width: 200%;
+            display: flex;
+        }
+
+        .fog-img {
+            position: relative;
+            width: 50%;
+            background-repeat: repeat-x;
+            background-size: cover;
+            background-position: center;
+            animation-name: fogAnimation;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        .fog-img-first {
+            animation-duration: 60s;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,250c50,0,75-50,100-50s50,50,100,50s50-50,100-50s50,50,100,50s50-50,100-50s50,50,100,50s50-50,100-50s50,50,100,50s50-50,100-50s50,50,100,50V300H0V250z' fill='%23ffffff' fill-opacity='0.15'/%3E%3C/svg%3E");
+        }
+
+        .fog-img-second {
+            animation-duration: 50s;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,250c50,0,75-25,100-25s50,25,100,25s50-25,100-25s50,25,100,25s50-25,100-25s50,25,100,25s50-25,100-25s50,25,100,25s50-25,100-25s50,25,100,25V300H0V250z' fill='%23ffffff' fill-opacity='0.2'/%3E%3C/svg%3E");
+        }
+
+        @keyframes fogAnimation {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .fog1 {
+            bottom: 40%;
+            height: 100px;
+            z-index: 2;
+        }
+
+        .fog2 {
+            bottom: 25%;
+            height: 80px;
+            z-index: 3;
+        }
+
+        /* Snow peaks */
+        .snow {
+            position: absolute;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800' preserveAspectRatio='none'%3E%3Cpath d='M600,210l-70,57l50,85l-80-45l-30,90l-40-95l-100,40l70-70l-60-75l100,35l30-95l30,95l85-35l-55,70l70,60L600,210z' fill='%23ffffff' fill-opacity='0.8'/%3E%3C/svg%3E");
+            width: 100%;
+            height: 20%;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 2;
+            bottom: 45%;
+        }
+
+        /* Main content */
+        .page-wrapper {
+            position: relative;
+            z-index: 5;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 25px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(11, 31, 44, 0.6);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+            color: #c9a97a;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        nav ul li a:hover {
+            background: rgba(201, 169, 122, 0.2);
+            color: #c9a97a;
+        }
+
+        nav ul li a.active {
+            background: #c9a97a;
+            color: #0b1f2c;
+        }
+
+        /* Hero section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 100vh;
+            padding: 0 50px;
+        }
+
+        .hero-content {
+            max-width: 850px;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        h1 span {
+            display: block;
+            font-size: 6rem;
+            color: #c9a97a;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+            font-weight: 400;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: #c9a97a;
+            color: #0b1f2c;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+            background: #d6b78a;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Adventures section */
+        .section {
+            padding: 100px 50px;
+            position: relative;
+            background: rgba(11, 31, 44, 0.8);
+        }
+
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 50px;
+            text-align: center;
+            position: relative;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #c9a97a;
+            border-radius: 2px;
+        }
+
+        .adventures-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .adventure-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 240px 30px 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .adventure-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            transition: transform 0.5s ease;
+        }
+
+        .adventure-card:nth-child(1)::before {
+            background-image: url('https://source.unsplash.com/random/600x400/?hiking,mountains');
+        }
+
+        .adventure-card:nth-child(2)::before {
+            background-image: url('https://source.unsplash.com/random/600x400/?climbing,mountains');
+        }
+
+        .adventure-card:nth-child(3)::before {
+            background-image: url('https://source.unsplash.com/random/600x400/?camping,mountains');
+        }
+
+        .adventure-card:hover::before {
+            transform: scale(1.1);
+        }
+
+        .adventure-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .adventure-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+            position: relative;
+        }
+
+        .adventure-title::before {
+            content: '';
+            position: absolute;
+            top: -25px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: #c9a97a;
+        }
+
+        .adventure-text {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            font-size: 1rem;
+            margin-bottom: 25px;
+        }
+
+        .adventure-link {
+            display: inline-flex;
+            align-items: center;
+            color: #c9a97a;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .adventure-link i {
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .adventure-link:hover {
+            color: #d6b78a;
+        }
+
+        .adventure-link:hover i {
+            transform: translateX(5px);
+        }
+
+        /* Testimonial section */
+        .testimonial {
+            padding: 100px 50px;
+            background: rgba(39, 67, 85, 0.7);
+            position: relative;
+        }
+
+        .testimonial-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .testimonial-text {
+            font-size: 1.3rem;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+            text-align: center;
+            font-style: italic;
+            position: relative;
+        }
+
+        .testimonial-text::before,
+        .testimonial-text::after {
+            content: '"';
+            font-size: 4rem;
+            position: absolute;
+            opacity: 0.2;
+            font-family: Georgia, serif;
+            line-height: 0.1;
+            color: #c9a97a;
+        }
+
+        .testimonial-text::before {
+            top: 0;
+            left: -20px;
+        }
+
+        .testimonial-text::after {
+            bottom: 0;
+            right: -20px;
+            transform: rotate(180deg);
+        }
+
+        .testimonial-author {
+            text-align: center;
+        }
+
+        .author-name {
+            font-weight: 700;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        .author-title {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* Footer styling */
+        footer {
+            padding: 80px 50px 30px;
+            background: rgba(11, 31, 44, 0.9);
+            position: relative;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #c9a97a;
+        }
+
+        .footer-info p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .footer-title {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: #c9a97a;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .footer-links a:hover {
+            color: #c9a97a;
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: #c9a97a;
+            color: #0b1f2c;
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            width: 100%;
+            text-align: center;
+            margin-top: 70px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Snow particle effects */
+        .snow-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 4;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .snow-particle {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            opacity: 0;
+            animation: snowfall linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes snowfall {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(100vh) translateX(var(--x-end)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .snow {
+                bottom: 50%;
+            }
+            
+            .fog1 {
+                bottom: 45%;
+            }
+            
+            .fog2 {
+                bottom: 30%;
+            }
+
+            .cursor-dot, .cursor-outline, .eagle {
+                display: none;
+            }
+
+            body {
+                cursor: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 20px 30px;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .hero {
+                padding: 0 30px;
+            }
+
+            h1 {
+                font-size: 3.5rem;
+            }
+            
+            h1 span {
+                font-size: 4rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .section,
+            .testimonial {
+                padding: 70px 30px;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Custom cursor -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+    <div class="eagle" id="eagle">
+        <div class="eagle-wing eagle-wing-left"></div>
+        <div class="eagle-body"></div>
+        <div class="eagle-wing eagle-wing-right"></div>
+    </div>
+
+    <!-- Mountain animation background -->
+    <div class="mountain-container">
+        <div class="sky"></div>
+        <div class="stars"></div>
+        <div class="mountains">
+            <div class="mountain mountain-back"></div>
+            <div class="snow"></div>
+            <div class="fog fog1">
+                <div class="fog-container">
+                    <div class="fog-img fog-img-first"></div>
+                    <div class="fog-img fog-img-first"></div>
+                </div>
+            </div>
+            <div class="mountain mountain-mid"></div>
+            <div class="fog fog2">
+                <div class="fog-container">
+                    <div class="fog-img fog-img-second"></div>
+                    <div class="fog-img fog-img-second"></div>
+                </div>
+            </div>
+            <div class="mountain mountain-front"></div>
+        </div>
+        <div id="clouds-container"></div>
+        <div class="snow-particles" id="snow-particles"></div>
+    </div>
+
+    <div class="page-wrapper">
+        <header>
+            <div class="logo">
+                <i class="fas fa-mountain"></i>
+                ALPINA
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home" class="active">Home</a></li>
+                    <li><a href="#adventures">Adventures</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <h1>Discover The <span>Heights</span></h1>
+                <div class="hero-subtitle">Where every peak tells a story</div>
+                <p>
+                    Experience the majestic beauty of mountain landscapes and embark on unforgettable adventures. From gentle hiking trails to challenging summits, we guide you through the world's most breathtaking mountain ranges.
+                </p>
+                <a href="#adventures" class="cta-button">Explore Adventures</a>
+            </div>
+        </section>
+
+        <section class="section" id="adventures">
+            <h2 class="section-title">Mountain Adventures</h2>
+            <div class="adventures-grid">
+                <div class="adventure-card">
+                    <h3 class="adventure-title">Scenic Hiking Trails</h3>
+                    <p class="adventure-text">
+                        Explore carefully curated hiking paths that showcase the most spectacular mountain views, hidden waterfalls, and diverse alpine ecosystems.
+                    </p>
+                    <a href="#" class="adventure-link">View Trails <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="adventure-card">
+                    <h3 class="adventure-title">Summit Expeditions</h3>
+                    <p class="adventure-text">
+                        Challenge yourself with guided climbs to iconic mountain peaks. Our expert guides ensure safety while you conquer new heights.
+                    </p>
+                    <a href="#" class="adventure-link">View Expeditions <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="adventure-card">
+                    <h3 class="adventure-title">Alpine Retreats</h3>
+                    <p class="adventure-text">
+                        Unwind in carefully selected mountain lodges and cabins that offer comfort and authenticity amid breathtaking natural surroundings.
+                    </p>
+                    <a href="#" class="adventure-link">View Retreats <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonial" id="testimonial">
+            <h2 class="section-title">Adventure Stories</h2>
+            <div class="testimonial-container">
+                <div class="testimonial-text">
+                    My journey with Alpina to the Eastern Alps was beyond expectation. The guides were knowledgeable and passionate about the mountains. Reaching the summit as the sun rose over the peaks was a moment I'll treasure forever - it felt like standing on top of the world.
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-name">Michael Thornton</div>
+                    <div class="author-title">Summit Expedition, Eastern Alps</div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="footer-logo">ALPINA</div>
+                    <p>
+                        We specialize in curating exceptional mountain experiences for adventure enthusiasts. Our passion for the mountains drives us to share their majesty with fellow explorers seeking unforgettable journeys.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-nav">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#adventures">Adventures</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#gallery">Gallery</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h3 class="footer-title">Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Alpine Base Lodge, Mountain Ave</li>
+                        <li><i class="fas fa-phone"></i> +1 (800) 456-7890</li>
+                        <li><i class="fas fa-envelope"></i> adventures@alpina.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Alpina Mountain Adventures. All rights reserved. Reaching new heights since 2010.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Custom cursor
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorOutline = document.getElementById('cursor-outline');
+        const eagle = document.getElementById('eagle');
+
+        let mouseX = 0;
+        let mouseY = 0;
+        let eagleX = 0;
+        let eagleY = 0;
+        let dotX = 0;
+        let dotY = 0;
+        let outlineX = 0;
+        let outlineY = 0;
+
+        // Track mouse position
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // Update cursor and eagle positions with easing
+        function updateCursor() {
+            // Calculate distances
+            let dotDiffX = mouseX - dotX;
+            let dotDiffY = mouseY - dotY;
+            let outlineDiffX = mouseX - outlineX;
+            let outlineDiffY = mouseY - outlineY;
+            let eagleDiffX = mouseX - eagleX;
+            let eagleDiffY = mouseY - eagleY - 50; // Offset eagle above cursor
+
+            // Apply easing
+            dotX += dotDiffX * 0.3;
+            dotY += dotDiffY * 0.3;
+            outlineX += outlineDiffX * 0.15;
+            outlineY += outlineDiffY * 0.15;
+            eagleX += eagleDiffX * 0.05;
+            eagleY += eagleDiffY * 0.05;
+
+            // Apply positions
+            cursorDot.style.left = `${dotX}px`;
+            cursorDot.style.top = `${dotY}px`;
+            cursorOutline.style.left = `${outlineX}px`;
+            cursorOutline.style.top = `${outlineY}px`;
+            eagle.style.left = `${eagleX}px`;
+            eagle.style.top = `${eagleY}px`;
+
+            // Apply rotation to eagle based on cursor movement
+            if (dotDiffX > 5) {
+                eagle.style.transform = `translate(-50%, -50%) rotate(15deg)`;
+            } else if (dotDiffX < -5) {
+                eagle.style.transform = `translate(-50%, -50%) rotate(-15deg)`;
+            } else {
+                eagle.style.transform = `translate(-50%, -50%) rotate(0deg)`;
+            }
+
+            requestAnimationFrame(updateCursor);
+        }
+        
+        // Initialize cursor
+        updateCursor();
+
+        // Add hover effect to all buttons and links
+        const hoverElements = document.querySelectorAll('a, button, .adventure-card, .social-links a');
+        
+        hoverElements.forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                cursorDot.style.width = '12px';
+                cursorDot.style.height = '12px';
+                cursorOutline.classList.add('cursor-hover');
+            });
+            
+            element.addEventListener('mouseleave', () => {
+                cursorDot.style.width = '8px';
+                cursorDot.style.height = '8px';
+                cursorOutline.classList.remove('cursor-hover');
+            });
+        });
+
+        // Create cursor-following cloud effects
+        function createCursorClouds() {
+            const cloudsContainer = document.getElementById('clouds-container');
+            let lastCreationTime = Date.now();
+            
+            document.addEventListener('mousemove', (e) => {
+                // Only create clouds occasionally to prevent too many DOM elements
+                const now = Date.now();
+                if (now - lastCreationTime > 300 && Math.random() > 0.7) {
+                    lastCreationTime = now;
+                    
+                    // Create a small cloud
+                    const cloud = document.createElement('div');
+                    cloud.classList.add('cloud-follow');
+                    
+                    // Random cloud properties
+                    const size = Math.random() * 70 + 30; // 30-100px
+                    const left = e.clientX;
+                    const top = e.clientY;
+                    const duration = Math.random() * 5 + 5; // 5-10s
+                    const opacity = Math.random() * 0.3 + 0.2;
+                    
+                    // Apply styles
+                    cloud.style.width = `${size}px`;
+                    cloud.style.height = `${size * 0.7}px`;
+                    cloud.style.borderRadius = '50%';
+                    cloud.style.background = 'rgba(255, 255, 255, 0.6)';
+                    cloud.style.left = `${left}px`;
+                    cloud.style.top = `${top}px`;
+                    cloud.style.opacity = `${opacity}`;
+                    cloud.style.transform = 'translate(-50%, -50%)';
+                    
+                    // Add to container
+                    cloudsContainer.appendChild(cloud);
+                    
+                    // Animate the cloud rising and fading
+                    gsapCloud(cloud, opacity);
+                }
+            });
+            
+            // Animate each cloud with GSAP-like animation
+            function gsapCloud(cloud, opacity) {
+                let progress = 0;
+                const duration = 5000; // 5 seconds
+                const startTime = Date.now();
+                
+                function updateCloud() {
+                    const elapsed = Date.now() - startTime;
+                    progress = Math.min(elapsed / duration, 1);
+                    
+                    // Calculate new position and opacity
+                    const curY = parseInt(cloud.style.top) - (progress * 100); 
+                    const curOpacity = opacity * (1 - progress);
+                    const scale = 1 + (progress * 0.5);
+                    
+                    // Apply new values
+                    cloud.style.top = `${curY}px`;
+                    cloud.style.opacity = curOpacity;
+                    cloud.style.transform = `translate(-50%, -50%) scale(${scale})`;
+                    
+                    // Continue animation or remove cloud when done
+                    if (progress < 1) {
+                        requestAnimationFrame(updateCloud);
+                    } else {
+                        cloud.remove();
+                    }
+                }
+                
+                updateCloud();
+            }
+        }
+
+        // Create snow particles
+        function createSnowParticles() {
+            const snowContainer = document.getElementById('snow-particles');
+            
+            function createSnow() {
+                // Only create snow with 5% chance
+                if (Math.random() > 0.05) return;
+                
+                const snow = document.createElement('div');
+                snow.classList.add('snow-particle');
+                
+                // Random size (1-5px)
+                const size = Math.random() * 4 + 1;
+                
+                // Random position
+                const left = Math.random() * 100;
+                
+                // Random animation properties
+                const duration = Math.random() * 15 + 10; // 10-25s
+                const endX = (Math.random() - 0.5) * 500; // -250px to 250px
+                
+                // Apply styles
+                snow.style.width = `${size}px`;
+                snow.style.height = `${size}px`;
+                snow.style.left = `${left}%`;
+                snow.style.top = `-10px`;
+                snow.style.opacity = `${Math.random() * 0.7 + 0.3}`;
+                snow.style.animationDuration = `${duration}s`;
+                snow.style.setProperty('--x-end', `${endX}px`);
+                
+                // Add to container and remove when animation completes
+                snowContainer.appendChild(snow);
+                setTimeout(() => {
+                    snow.remove();
+                }, duration * 1000);
+            }
+            
+            // Create snow periodically
+            setInterval(createSnow, 100);
+        }
+
+        // Create twinkling stars
+        function createTwinklingStars() {
+            const starsContainer = document.querySelector('.stars');
+            const starCount = 50;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star-twinkle');
+                
+                // Random position
+                const left = Math.random() * 100;
+                const top = Math.random() * 60;
+                
+                // Random animation delay
+                const delay = Math.random() * 3;
+                
+                // Apply styles
+                star.style.left = `${left}%`;
+                star.style.top = `${top}%`;
+                star.style.animationDelay = `${delay}s`;
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // Parallax effect for mountains that responds to cursor position
+        document.addEventListener('mousemove', (e) => {
+            const mountainBack = document.querySelector('.mountain-back');
+            const mountainMid = document.querySelector('.mountain-mid');
+            const mountainFront = document.querySelector('.mountain-front');
+            const snow = document.querySelector('.snow');
+            
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 50;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 50;
+            
+            mountainBack.style.transform = `translateX(${xAxis * 2}px) translateY(${yAxis * 2}px)`;
+            mountainMid.style.transform = `translateX(${xAxis * 1.5}px) translateY(${yAxis * 1.5}px)`;
+            mountainFront.style.transform = `translateX(${xAxis}px) translateY(${yAxis}px)`;
+            snow.style.transform = `translateX(${xAxis * 1.8}px) translateY(${yAxis * 1.2}px)`;
+        });
+        
+        // Initialize all animations
+        document.addEventListener('DOMContentLoaded', () => {
+            createTwinklingStars();
+            createCursorClouds();
+            createSnowParticles();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+/* Base Styles */
+:root {
+    --bg-color: #1e1e1e;
+    --terminal-bg: #121212;
+    --terminal-header: #333;
+    --text-color: #f0f0f0;
+    --prompt-color: #00ff9c;
+    --command-color: #ffffff;
+    --output-color: #cccccc;
+    --link-color: #3498db;
+    --error-color: #ff5e5e;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Fira Code', monospace;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  
+  .container {
+    width: 90%;
+    max-width: 900px;
+    height: 85vh;
+  }
+  
+  /* Terminal Styles */
+  .terminal {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .terminal-header {
+    background-color: var(--terminal-header);
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    height: 40px;
+  }
+  
+  .terminal-buttons {
+    display: flex;
+    gap: 8px;
+    margin-right: 15px;
+  }
+  
+  .terminal-button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+  
+  .terminal-button.close {
+    background-color: #ff5f56;
+  }
+  
+  .terminal-button.minimize {
+    background-color: #ffbd2e;
+  }
+  
+  .terminal-button.maximize {
+    background-color: #27c93f;
+  }
+  
+  .terminal-title {
+    color: #aaa;
+    font-size: 14px;
+  }
+  
+  .terminal-body {
+    background-color: var(--terminal-bg);
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+  }
+  
+  .terminal-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .terminal-line {
+    display: flex;
+    margin-top: 10px;
+  }
+  
+  .prompt {
+    color: var(--prompt-color);
+    margin-right: 8px;
+  }
+  
+  .command-input {
+    background: transparent;
+    border: none;
+    color: var(--command-color);
+    flex: 1;
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+    caret-color: transparent;
+  }
+  
+  .cursor {
+    width: 8px;
+    height: 16px;
+    background-color: var(--text-color);
+    animation: blink 1s step-end infinite;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  
+  @keyframes blink {
+    from, to {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+  
+  /* Command output styles */
+  .intro {
+    margin-bottom: 15px;
+    line-height: 1.4;
+  }
+  
+  .ascii-art {
+    color: var(--prompt-color);
+    font-size: 12px;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  
+  .command {
+    color: var(--link-color);
+  }
+  
+  .command-output {
+    white-space: pre-wrap;
+    color: var(--output-color);
+    margin: 5px 0;
+    padding-left: 20px;
+  }
+  
+  .error {
+    color: var(--error-color);
+  }
+  
+  .separator {
+    margin: 8px 0;
+    border-top: 1px dashed #444;
+  }
+  
+  /* Table styling for certain commands */
+  .command-table {
+    margin: 10px 0;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .command-table th, .command-table td {
+    text-align: left;
+    padding: 5px 10px;
+  }
+  
+  .command-table th {
+    color: var(--link-color);
+    border-bottom: 1px solid #444;
+  }
+  
+  /* For mobile screens */
+  @media (max-width: 768px) {
+    .container {
+      width: 95%;
+      height: 90vh;
+    }
+    
+    body {
+      font-size: 14px;
+    }
+    
+    .ascii-art {
+      font-size: 8px;
+    }
+  }

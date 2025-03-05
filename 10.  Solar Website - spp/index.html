@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solaris | Radiate Brilliance</title>
+    <style>
+        /* Base styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffa62e 0%, #ea7317 100%);
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Sun animation container */
+        .sun-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        /* Sky gradient */
+        .sky {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #ff7e00, #ffae42);
+            opacity: 0.6;
+        }
+
+        /* Sun styling */
+        .sun {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            top: 15%;
+            right: 10%;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, 
+                rgba(255, 235, 59, 1) 0%, 
+                rgba(255, 177, 66, 1) 50%, 
+                rgba(255, 111, 0, 1) 100%);
+            box-shadow: 0 0 80px 40px rgba(255, 177, 66, 0.8);
+            animation: pulseSun 8s infinite alternate ease-in-out;
+            transform-origin: center center;
+        }
+
+        @keyframes pulseSun {
+            0% {
+                box-shadow: 0 0 80px 40px rgba(255, 177, 66, 0.8);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 100px 50px rgba(255, 177, 66, 0.9);
+                transform: scale(1.05);
+            }
+            100% {
+                box-shadow: 0 0 80px 40px rgba(255, 177, 66, 0.8);
+                transform: scale(1);
+            }
+        }
+
+        /* Sun rays */
+        .rays {
+            position: absolute;
+            top: 15%;
+            right: 10%;
+            width: 300px;
+            height: 300px;
+            animation: rotateRays 20s linear infinite;
+        }
+
+        .ray {
+            position: absolute;
+            width: 2px;
+            background: linear-gradient(to top, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8));
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            transform-origin: bottom center;
+        }
+
+        @keyframes rotateRays {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Sun flares */
+        .flares {
+            position: absolute;
+            top: 15%;
+            right: 10%;
+            width: 300px;
+            height: 300px;
+        }
+
+        .flare {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at center, rgba(255, 235, 59, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            animation: flareAnimation ease-in-out infinite;
+        }
+
+        @keyframes flareAnimation {
+            0%, 100% {
+                transform: scale(1) translate(0, 0);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.2) translate(var(--x), var(--y));
+                opacity: 0.9;
+            }
+        }
+
+        /* Heat waves */
+        .heat-waves {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            opacity: 0.3;
+            overflow: hidden;
+        }
+
+        .heat-wave {
+            position: absolute;
+            width: 100%;
+            height: 40px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%23FFF'%3E%3C/path%3E%3C/svg%3E") no-repeat;
+            background-size: 100% 100%;
+            animation: waveAnimation linear infinite;
+        }
+
+        @keyframes waveAnimation {
+            0% {
+                transform: translateX(-50%) translateY(0);
+            }
+            100% {
+                transform: translateX(0%) translateY(0);
+            }
+        }
+
+        /* Main content */
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(255, 126, 0, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+            color: #fff;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Hero section */
+        .hero {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            padding: 150px 50px 50px;
+            align-items: center;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            position: relative;
+            color: #fff;
+            text-shadow: 0 2px 15px rgba(255, 69, 0, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: #fff;
+            color: #ff7e00;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .cta-button:hover {
+            background: #fff8f0;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Features section */
+        .section {
+            padding: 100px 50px;
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            z-index: -1;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 50px;
+            text-align: center;
+            position: relative;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(255, 69, 0, 0.2);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 2px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 0 5px 15px rgba(255, 69, 0, 0.3);
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .feature-text {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 100px 50px;
+            text-align: center;
+        }
+
+        .testimonial-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .testimonial-text {
+            font-size: 1.3rem;
+            line-height: 1.7;
+            color: #fff;
+            margin-bottom: 30px;
+            font-style: italic;
+            position: relative;
+        }
+
+        .testimonial-text::before,
+        .testimonial-text::after {
+            content: '"';
+            font-size: 4rem;
+            position: absolute;
+            opacity: 0.2;
+            font-family: Georgia, serif;
+            line-height: 0.1;
+        }
+
+        .testimonial-text::before {
+            top: 0;
+            left: -20px;
+        }
+
+        .testimonial-text::after {
+            bottom: 0;
+            right: -20px;
+            transform: rotate(180deg);
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        .testimonial-role {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* Footer styling */
+        footer {
+            padding: 50px 50px 30px;
+            background: rgba(255, 126, 0, 0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+            margin-top: 100px;
+        }
+
+        .footer-wave {
+            position: absolute;
+            top: -100px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z' fill='rgba(255, 126, 0, 0.2)'%3E%3C/path%3E%3C/svg%3E") no-repeat;
+            background-size: cover;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .footer-info {
+            max-width: 400px;
+            margin-bottom: 30px;
+        }
+
+        .footer-info p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .footer-links h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links ul li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links ul li a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            width: 100%;
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sun, .rays, .flares {
+                width: 200px;
+                height: 200px;
+                top: 10%;
+                right: 5%;
+            }
+
+            header {
+                padding: 20px 30px;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .hero {
+                padding: 120px 30px 50px;
+                text-align: center;
+            }
+
+            h1 {
+                font-size: 2.8rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .section {
+                padding: 70px 30px;
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+            }
+
+            .testimonials {
+                padding: 70px 30px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .footer-links {
+                margin-top: 30px;
+                text-align: center;
+                width: 100%;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Sun animation background -->
+    <div class="sun-container">
+        <div class="sky"></div>
+        <div class="sun"></div>
+        <div class="rays" id="rays"></div>
+        <div class="flares" id="flares"></div>
+        <div class="heat-waves" id="heatWaves"></div>
+    </div>
+
+    <div class="page-wrapper">
+        <header>
+            <div class="logo">
+                <i class="fas fa-sun"></i>
+                SOLARIS
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <h1>Illuminate Your Digital Presence</h1>
+                <div class="hero-subtitle">Radiate brilliance in everything you do</div>
+                <p>
+                    Harness the power of the sun to energize your brand and shine brighter than your competition. Our blazing-fast solutions create digital experiences that dazzle and inspire.
+                </p>
+                <a href="#features" class="cta-button">Shine Bright</a>
+            </div>
+        </section>
+
+        <section class="section" id="features">
+            <h2 class="section-title">Radiant Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="feature-title">High-Energy Performance</h3>
+                    <p class="feature-text">
+                        Experience blazing-fast websites and applications optimized for maximum efficiency and speed, just like the sun's radiant energy.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3 class="feature-title">Brilliant Design</h3>
+                    <p class="feature-text">
+                        Our vibrant, eye-catching designs illuminate your brand and make your content shine, creating memorable user experiences.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="feature-title">Illuminating Insights</h3>
+                    <p class="feature-text">
+                        Gain clarity with our advanced analytics and reporting, shedding light on opportunities for growth and optimization.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="feature-title">Global Reach</h3>
+                    <p class="feature-text">
+                        Like the sun that touches every corner of the earth, our solutions help you reach audiences worldwide with localized content.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials" id="testimonials">
+            <h2 class="section-title">Glowing Testimonials</h2>
+            <div class="testimonial-container">
+                <div class="testimonial-text">
+                    Working with Solaris was like watching the sunrise on our brand. Their energetic approach and brilliant solutions transformed our digital presence completely. The results have been nothing short of dazzling.
+                </div>
+                <div class="testimonial-author">Sarah Johnson</div>
+                <div class="testimonial-role">Marketing Director, SunRay Enterprises</div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-wave"></div>
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="footer-logo">SOLARIS</div>
+                    <p>
+                        We help brands shine with radiant digital solutions that capture attention and drive growth. Our sun-powered approach brings warmth and energy to everything we create.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#testimonials">Testimonials</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Our Services</h3>
+                    <ul>
+                        <li><a href="#">Web Development</a></li>
+                        <li><a href="#">Digital Marketing</a></li>
+                        <li><a href="#">Brand Strategy</a></li>
+                        <li><a href="#">UI/UX Design</a></li>
+                        <li><a href="#">Content Creation</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Solaris Digital. All rights reserved. Radiating brilliance since 2020.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Create sun rays
+        function createSunRays() {
+            const raysContainer = document.getElementById('rays');
+            const rayCount = 18;
+            
+            for (let i = 0; i < rayCount; i++) {
+                const ray = document.createElement('div');
+                ray.classList.add('ray');
+                
+                // Calculate angle for even distribution 
+                const angle = (i * (360 / rayCount));
+                const length = 280 + Math.random() * 80; // Slightly variable length
+                
+                // Apply styles
+                ray.style.height = `${length}px`;
+                ray.style.width = '4px';
+                ray.style.transformOrigin = 'center bottom';
+                ray.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+                ray.style.opacity = 0.6 + Math.random() * 0.4;
+                
+                // Center the ray
+                ray.style.left = '50%';
+                ray.style.top = '50%';
+                ray.style.marginTop = '-150px'; // Half of sun height
+                
+                raysContainer.appendChild(ray);
+            }
+        }
+        
+        // Create sun flares
+        function createSunFlares() {
+            const flaresContainer = document.getElementById('flares');
+            const flareCount = 6;
+            
+            for (let i = 0; i < flareCount; i++) {
+                const flare = document.createElement('div');
+                flare.classList.add('flare');
+                
+                // Random position around the sun
+                const angle = Math.random() * 360;
+                const distance = 80 + Math.random() * 40;
+                const x = Math.cos(angle * Math.PI / 180) * distance;
+                const y = Math.sin(angle * Math.PI / 180) * distance;
+                
+                // Random animation
+                const animDuration = 3 + Math.random() * 4;
+                const xMove = (Math.random() - 0.5) * 40;
+                const yMove = (Math.random() - 0.5) * 40;
+                
+                // Apply styles
+                flare.style.left = `calc(50% + ${x}px)`;
+                flare.style.top = `calc(50% + ${y}px)`;
+                flare.style.transform = 'translate(-50%, -50%)';
+                flare.style.animationDuration = `${animDuration}s`;
+                flare.style.setProperty('--x', `${xMove}px`);
+                flare.style.setProperty('--y', `${yMove}px`);
+                
+                flaresContainer.appendChild(flare);
+            }
+        }
+        
+        // Create heat waves
+        function createHeatWaves() {
+            const wavesContainer = document.getElementById('heatWaves');
+            const waveCount = 5;
+            
+            for (let i = 0; i < waveCount; i++) {
+                const wave = document.createElement('div');
+                wave.classList.add('heat-wave');
+                
+                // Positioning and animation
+                const bottom = i * 15;
+                const duration = 20 + i * 5;
+                const delay = i * 2;
+                
+                // Apply styles
+                wave.style.bottom = `${bottom}%`;
+                wave.style.animationDuration = `${duration}s`;
+                wave.style.animationDelay = `-${delay}s`;
+                
+                wavesContainer.appendChild(wave);
+            }
+        }
+        
+        // Create a pulsing effect for the sun
+        function pulseSun() {
+            const sun = document.querySelector('.sun');
+            let scale = 1;
+            let increasing = false;
+            
+            setInterval(() => {
+                if (increasing) {
+                    scale += 0.002;
+                    if (scale >= 1.05) increasing = false;
+                } else {
+                    scale -= 0.002;
+                    if (scale <= 1) increasing = true;
+                }
+                
+                // Apply the scale
+                sun.style.transform = `scale(${scale})`;
+                
+                // Also adjust the glow
+                const glowSize = 70 + scale * 10;
+                sun.style.boxShadow = `0 0 ${glowSize}px ${glowSize/2}px rgba(255, 177, 66, 0.8)`;
+            }, 50);
+        }
+        
+        // Add parallax effect to the sun
+        document.addEventListener('mousemove', (e) => {
+            const sun = document.querySelector('.sun');
+            const rays = document.querySelector('.rays');
+            const flares = document.querySelector('.flares');
+            
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 40;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 40;
+            
+            // Move sun and rays slightly for parallax effect
+            sun.style.transform = `translate(${xAxis}px, ${yAxis}px)`;
+            rays.style.transform = `translate(${xAxis}px, ${yAxis}px) rotate(0deg)`;
+            flares.style.transform = `translate(${xAxis}px, ${yAxis}px)`;
+        });
+        
+        // Initialize all animations
+        document.addEventListener('DOMContentLoaded', () => {
+            createSunRays();
+            createSunFlares();
+            createHeatWaves();
+            // pulseSun(); // Uncomment if you want the JS-based pulsing effect instead of CSS animation
+        });
+    </script>
+</body>
+</html>

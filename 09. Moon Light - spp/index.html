@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moonlight | Digital Serenity</title>
+    <style>
+        /* Base styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f1746 0%, #171e3c 40%, #1f2550 100%);
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Night sky container */
+        .night-sky {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        /* Moon styling */
+        .moon {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            top: 15%;
+            right: 10%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, 
+                rgba(250, 250, 240, 1) 0%, 
+                rgba(240, 240, 230, 0.9) 35%, 
+                rgba(228, 228, 218, 0.8) 70%, 
+                rgba(210, 210, 210, 0.5) 100%);
+            box-shadow: 0 0 50px 10px rgba(255, 255, 240, 0.4);
+            animation: moonGlow 8s infinite alternate ease-in-out;
+            transform-origin: center center;
+        }
+
+        .moon::before {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(220, 220, 220, 0.7);
+            filter: blur(10px);
+        }
+
+        .moon::after {
+            content: '';
+            position: absolute;
+            top: 40%;
+            left: 60%;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(220, 220, 220, 0.8);
+            filter: blur(12px);
+        }
+
+        @keyframes moonGlow {
+            0% {
+                box-shadow: 0 0 50px 10px rgba(255, 255, 240, 0.4);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 60px 12px rgba(255, 255, 240, 0.5);
+                transform: scale(1.02);
+            }
+            100% {
+                box-shadow: 0 0 50px 10px rgba(255, 255, 240, 0.4);
+                transform: scale(1);
+            }
+        }
+
+        /* Stars styling */
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0, 0, 0, 0)),
+                radial-gradient(2px 2px at 40px 70px, #ffffff, rgba(0, 0, 0, 0)),
+                radial-gradient(1px 1px at 50px 160px, #ffffff, rgba(0, 0, 0, 0)),
+                radial-gradient(2px 2px at 90px 40px, #ffffff, rgba(0, 0, 0, 0)),
+                radial-gradient(1px 1px at 130px 80px, #ffffff, rgba(0, 0, 0, 0)),
+                radial-gradient(2px 2px at 160px 120px, #ffffff, rgba(0, 0, 0, 0)),
+                radial-gradient(1px 1px at 200px 50px, #ffffff, rgba(0, 0, 0, 0)),
+                radial-gradient(1px 1px at 240px 90px, #ffffff, rgba(0, 0, 0, 0));
+            background-repeat: repeat;
+            background-size: 250px 250px;
+        }
+
+        .stars-1 {
+            animation: twinkle 4s infinite alternate;
+        }
+
+        .stars-2 {
+            background-position: 50px 30px;
+            animation: twinkle 5s 1s infinite alternate;
+        }
+
+        .stars-3 {
+            background-position: -30px -50px;
+            animation: twinkle 6s 2s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Clouds styling */
+        .clouds {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .cloud {
+            position: absolute;
+            background: rgba(42, 48, 85, 0.6);
+            border-radius: 100px;
+            filter: blur(20px);
+            animation: driftCloud linear infinite;
+        }
+
+        @keyframes driftCloud {
+            0% {
+                transform: translateX(-5%);
+            }
+            100% {
+                transform: translateX(105%);
+            }
+        }
+
+        /* Shooting stars */
+        .shooting-stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .shooting-star {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
+            animation: shootingStar linear;
+            opacity: 0;
+            transform-origin: right;
+        }
+
+        @keyframes shootingStar {
+            0% {
+                transform: translateX(0) translateY(0) rotate(var(--angle));
+                opacity: 1;
+            }
+            70% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(var(--travel-x)) translateY(var(--travel-y)) rotate(var(--angle));
+                opacity: 0;
+            }
+        }
+
+        /* Main content */
+        .page-wrapper {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(15, 23, 70, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 1.6rem;
+            color: rgba(255, 255, 240, 0.9);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #fff;
+            transition: width 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero section */
+        .hero {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            padding: 150px 50px 50px;
+            align-items: center;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            position: relative;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 30px;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 14px 35px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .cta-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Content sections */
+        .section {
+            padding: 100px 50px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            text-align: center;
+            position: relative;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .card-text {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Footer styling */
+        footer {
+            padding: 40px 50px;
+            background: rgba(15, 23, 70, 0.3);
+            backdrop-filter: blur(10px);
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            width: 100%;
+            text-align: center;
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .moon {
+                width: 120px;
+                height: 120px;
+            }
+
+            header {
+                padding: 20px 30px;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .hero {
+                padding: 150px 30px 50px;
+                text-align: center;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .section {
+                padding: 70px 30px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                margin-top: 20px;
+                justify-content: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Night sky background with moon and stars -->
+    <div class="night-sky">
+        <div class="stars stars-1"></div>
+        <div class="stars stars-2"></div>
+        <div class="stars stars-3"></div>
+        <div class="moon"></div>
+        <div class="clouds" id="clouds"></div>
+        <div class="shooting-stars" id="shooting-stars"></div>
+    </div>
+
+    <div class="page-wrapper">
+        <header>
+            <div class="logo">
+                <i class="fas fa-moon"></i>
+                MOONLIGHT
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <h1>Embrace the Night</h1>
+                <div class="hero-subtitle">Where creativity never sleeps</div>
+                <p>
+                    Discover the tranquility and inspiration that comes with the night. Our night-themed digital solutions help your brand stand out in the darkness and shine like the brightest star in the sky.
+                </p>
+                <a href="#features" class="cta-button">Explore Our Universe</a>
+            </div>
+        </section>
+
+        <section class="section" id="features">
+            <h2 class="section-title">Our Stellar Features</h2>
+            <div class="cards-container">
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3 class="card-title">Night Vision</h3>
+                    <p class="card-text">
+                        Our dark mode designs help reduce eye strain during long night sessions while providing an elegant, sophisticated look for your digital presence.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-compass"></i>
+                    </div>
+                    <h3 class="card-title">Celestial Navigation</h3>
+                    <p class="card-text">
+                        Intuitive user interfaces designed with a stargazer's precision, guiding your users through your digital landscape with ease and wonder.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="card-title">Moonlit Performance</h3>
+                    <p class="card-text">
+                        Lightning-fast websites and applications optimized for peak performance, just like the perfect clarity of a moonlit night.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3 class="card-title">Nocturnal Magic</h3>
+                    <p class="card-text">
+                        Captivating animations and interactions that bring the enchantment of the night sky to your digital experience.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-left">
+                    <div class="footer-logo">MOONLIGHT</div>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="footer-right">
+                    <div class="footer-links">
+                        <a href="#home">Home</a>
+                        <a href="#features">Features</a>
+                        <a href="#about">About</a>
+                        <a href="#projects">Projects</a>
+                        <a href="#contact">Contact</a>
+                    </div>
+                </div>
+                <div class="copyright">
+                    &copy; 2025 Moonlight Digital. All rights reserved. Crafted under the stars.
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Create clouds
+        function createClouds() {
+            const cloudsContainer = document.getElementById('clouds');
+            const cloudCount = 6;
+            
+            for (let i = 0; i < cloudCount; i++) {
+                const cloud = document.createElement('div');
+                cloud.classList.add('cloud');
+                
+                // Random cloud properties
+                const width = Math.random() * 300 + 200;
+                const height = width * 0.3;
+                const top = Math.random() * 100;
+                const animationDuration = Math.random() * 60 + 60;
+                const delay = Math.random() * 20;
+                
+                // Apply styles
+                cloud.style.width = `${width}px`;
+                cloud.style.height = `${height}px`;
+                cloud.style.top = `${top}%`;
+                cloud.style.animationDuration = `${animationDuration}s`;
+                cloud.style.animationDelay = `-${delay}s`;
+                
+                cloudsContainer.appendChild(cloud);
+            }
+        }
+        
+        // Create shooting stars
+        function createShootingStars() {
+            const starsContainer = document.getElementById('shooting-stars');
+            
+            function createStar() {
+                // Only create star with 2% chance to keep them rare
+                if (Math.random() > 0.02) return;
+                
+                const star = document.createElement('div');
+                star.classList.add('shooting-star');
+                
+                // Random shooting star properties
+                const width = Math.random() * 150 + 50;
+                const startX = Math.random() * window.innerWidth;
+                const startY = Math.random() * (window.innerHeight * 0.5);
+                const angle = Math.random() * 60 - 30; // -30 to 30 degrees
+                
+                // Calculate travel distance based on angle
+                const radians = angle * Math.PI / 180;
+                const travelX = Math.cos(radians) * width * 2;
+                const travelY = Math.sin(radians) * width * 2;
+                
+                const duration = Math.random() * 2 + 1; // 1-3s
+                
+                // Apply styles
+                star.style.width = `${width}px`;
+                star.style.left = `${startX}px`;
+                star.style.top = `${startY}px`;
+                star.style.setProperty('--angle', `${angle}deg`);
+                star.style.setProperty('--travel-x', `${travelX}px`);
+                star.style.setProperty('--travel-y', `${travelY}px`);
+                star.style.animation = `shootingStar ${duration}s linear forwards`;
+                
+                // Add to container and remove when animation completes
+                starsContainer.appendChild(star);
+                setTimeout(() => {
+                    star.remove();
+                }, duration * 1000);
+            }
+            
+            // Create shooting stars periodically
+            setInterval(createStar, 200);
+        }
+        
+        // Parallax effect for moon and stars
+        document.addEventListener('mousemove', (e) => {
+            const moon = document.querySelector('.moon');
+            const starsLayers = document.querySelectorAll('.stars');
+            
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 100;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 100;
+            
+            // Move moon more subtly
+            moon.style.transform = `translate(${xAxis * 2}px, ${yAxis * 2}px) scale(1)`;
+            
+            // Move each star layer differently for parallax depth
+            starsLayers.forEach((layer, index) => {
+                const depth = (index + 1) * 0.5;
+                layer.style.transform = `translate(${xAxis * depth}px, ${yAxis * depth}px)`;
+            });
+        });
+        
+        // Add subtle pulsing to stars
+        function pulseStars() {
+            const stars = document.querySelectorAll('.stars');
+            
+            stars.forEach((layer, index) => {
+                // Each star layer pulses with different timing
+                setInterval(() => {
+                    layer.style.opacity = (Math.random() * 0.3 + 0.7).toString();
+                }, (index + 1) * 1000 + Math.random() * 1000);
+            });
+        }
+        
+        // Add subtle twinkling effect to the moon 
+        function twinkleMoon() {
+            const moon = document.querySelector('.moon');
+            
+            setInterval(() => {
+                const glow = Math.random() * 10 + 50;
+                const scale = Math.random() * 0.02 + 0.99;
+                moon.style.boxShadow = `0 0 ${glow}px 10px rgba(255, 255, 240, 0.4)`;
+                moon.style.transform = `scale(${scale})`;
+            }, 3000);
+        }
+        
+        // Initialize all animations
+        document.addEventListener('DOMContentLoaded', () => {
+            createClouds();
+            createShootingStars();
+            pulseStars();
+            twinkleMoon();
+        });
+        
+        // Create more star layers dynamically for a richer sky
+        function enhanceStarfield() {
+            const nightSky = document.querySelector('.night-sky');
+            
+            // Create additional star layers
+            for (let i = 0; i < 2; i++) {
+                const starLayer = document.createElement('div');
+                starLayer.classList.add('stars');
+                starLayer.style.backgroundSize = `${300 + i * 50}px ${300 + i * 50}px`;
+                starLayer.style.backgroundPosition = `${i * 30}px ${i * 30}px`;
+                starLayer.style.opacity = '0.5';
+                starLayer.style.animationDelay = `${i * 2}s`;
+                nightSky.appendChild(starLayer);
+            }
+        }
+        
+        // Call the enhancement after a slight delay
+        setTimeout(enhanceStarfield, 100);
+    </script>
+</body>
+</html>
